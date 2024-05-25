@@ -1,23 +1,22 @@
 import {
-    ThunkDispatch,
-    UnknownAction,
-    combineReducers,
     configureStore,
 } from '@reduxjs/toolkit';
-import data from './data';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-
-const rootReducer = combineReducers({
-    data,
-});
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { authApi } from './features/auth/authApi';
 
 export const store = configureStore({
-    reducer: rootReducer,
-    middleware: (gDM) => gDM(),
+  reducer: {
+    [authApi.reducerPath]: authApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(authApi.middleware),
 });
 
+setupListeners(store.dispatch);
+
+export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = ThunkDispatch<RootState, any, UnknownAction>;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

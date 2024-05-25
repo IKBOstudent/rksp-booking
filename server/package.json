@@ -1,12 +1,13 @@
 {
     "name": "server",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "dist/index.js",
     "private": true,
     "scripts": {
+        "tsc": "tsc",
         "build": "prisma generate",
-        "dev": "prisma migrate dev && node src/index.js",
-        "start": "prisma db push && node src/index.js"
+        "dev": "prisma migrate dev && node dist/index.js",
+        "start": "prisma db push && node dist/index.js"
     },
     "keywords": [],
     "author": "",

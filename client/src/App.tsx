@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import RootComponent from './RootComponent';
-import { store } from './store/reducers/store';
+import { store } from './store/store';
 
 import { ThemeProvider } from '@gravity-ui/uikit';
 
