@@ -32,16 +32,16 @@ model Hotel {
     features            Feature[]
     availableRoomsCount Int
     reservations        Reservation[]
-    author              User          @relation(fields: [createdBy], references: [id])
-    createdBy           Int
+    User                User          @relation(fields: [owner], references: [id])
+    owner               Int
 }
 
 model Feature {
     id      Int     @id @default(autoincrement())
     value   Boolean
     name    String
-    Hotel   Hotel?  @relation(fields: [hotelId], references: [id])
-    hotelId Int?
+    Hotel   Hotel  @relation(fields: [hotelId], references: [id])
+    hotelId Int
 }
 
 model Reservation {

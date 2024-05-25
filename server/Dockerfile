@@ -1,12 +1,20 @@
-FROM node:20-alpine
+FROM node:20-slim AS base
+
 RUN corepack enable
 
 WORKDIR /app
-COPY . /app
+COPY pnpm-lock.yaml .
+RUN pnpm fetch
 
-RUN pnpm install
-RUN pnpm tsc
+FROM base AS build
+
+COPY . .
+ENV NODE_ENV=production
+
+RUN pnpm install -r --offline
 RUN pnpm run build
 
-# EXPOSE ${PORT}
-CMD pnpm start
+FROM base
+
+COPY --from=build . .
+CMD [ "pnpm", "start" ]
