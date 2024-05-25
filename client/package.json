@@ -18,6 +18,7 @@
         "not IE 11"
     ],
     "dependencies": {
+        "@gravity-ui/components": "^3.6.1",
         "@gravity-ui/date-components": "^2.3.1",
         "@gravity-ui/date-utils": "^2.4.0",
         "@gravity-ui/dynamic-forms": "^4.3.0",
