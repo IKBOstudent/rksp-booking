@@ -1,31 +1,44 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { EUserRole, IUser, ILoginUserData, IRegisterUserData } from './types';
 
-    
-    interface AuthResponse {
-      user: IUser;
-    }
-
-    export const authApi = createApi({
-      reducerPath: 'authApi',
-      baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
-      endpoints: (builder) => ({
-        login: builder.mutation<AuthResponse, { email: string; password: string }>({
-          query: (userData) => ({
-            url: '/signin',
-            method: 'POST',
-            body: userData,
-            credentials: 'include',
-          }),
+export const authApi = createApi({
+    reducerPath: 'authApi',
+    baseQuery: fetchBaseQuery({
+        baseUrl: import.meta.env.VITE_API_URI,
+        credentials: 'include',
+    }),
+    endpoints: (builder) => ({
+        login: builder.mutation<{ user: IUser }, ILoginUserData>({
+            query: ({ email, password }) => ({
+                url: '/signin',
+                method: 'POST',
+                body: { email, password },
+            }),
         }),
-        register: builder.mutation<AuthResponse, { name: string; email: string; password: string; role: string }>({
-          query: (userData) => ({
-            url: '/signup',
-            method: 'POST',
-            body: userData,
-            credentials: 'include',
-          }),
+        register: builder.mutation<{ user: IUser }, IRegisterUserData>({
+            query: ({ name, email, password, isPartner }) => ({
+                url: '/signup',
+                method: 'POST',
+                body: {
+                    name,
+                    email,
+                    password,
+                    role: isPartner ? EUserRole.PARTNER : EUserRole.CLIENT,
+                },
+            }),
         }),
-      }),
-    });
+        profile: builder.query<{ user: IUser }, void>({
+            query: () => '/profile',
+        }),
+        users: builder.query<{ users: IUser[] }, void>({
+            query: () => '/users',
+        }),
+    }),
+});
 
-    export const { useLoginMutation, useRegisterMutation } = authApi;
+export const {
+    useLoginMutation,
+    useRegisterMutation,
+    useProfileQuery,
+    useUsersQuery,
+} = authApi;

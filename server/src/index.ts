@@ -286,6 +286,48 @@ app.get(
     },
 );
 
+app.post('/book', authMiddleware, async (req: AuthRequest, res) => {
+    const { hotelId, checkInDate, checkOutDate, guestsCount } = req.body;
+
+    try {
+        const overlappingReservations = await prisma.reservation.findMany({
+            where: {
+                hotelId,
+                OR: [
+                    {
+                        checkInDate: {
+                            lt: checkOutDate,
+                        },
+                        checkOutDate: {
+                            gt: checkInDate,
+                        },
+                    },
+                ],
+            },
+        });
+
+        if (overlappingReservations.length > 0) {
+            return res.status(409).json({
+                message: 'No rooms available for the selected dates.',
+            });
+        }
+
+        const reservation = await prisma.reservation.create({
+            data: {
+                hotelId,
+                checkInDate,
+                checkOutDate,
+                guestsCount,
+                userId: req.user!.id,
+            },
+        });
+
+        res.status(201).json(reservation);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create reservation' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

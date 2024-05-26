@@ -13,11 +13,10 @@ interface FormData {
 export const SearchForm = () => {
     const { control, getValues, handleSubmit } = useForm<FormData>();
 
-    const onSubmit = (data: any) => console.log(data);
     console.log(getValues());
     return (
         <Card view="filled" style={{ padding: 16 }}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(console.log)}>
                 <Flex>
                     <Controller
                         name="destination"

@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+    vite-app:
+        build: .
+        container_name: rksp_server
+        environment:
+            - PORT=3000
+        ports:
+            - ${PORT}:${PORT}
