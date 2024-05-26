@@ -29,6 +29,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.2.2
         version: 2.2.5(react-redux@9.1.2(@types/react@18.3.3)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.3.0(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0))
       axios:
         specifier: ^1.6.8
         version: 1.7.2
@@ -59,6 +62,12 @@ importers:
       sass-loader:
         specifier: ^14.1.1
         version: 14.2.1(sass@1.77.2)
+      vite:
+        specifier: ^5.2.11
+        version: 5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0)
+      vite-plugin-html:
+        specifier: ^3.2.2
+        version: 3.2.2(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0))
     devDependencies:
       '@types/js-cookie':
         specifier: ^3.0.6
@@ -72,9 +81,6 @@ importers:
       '@types/react-redux':
         specifier: ^7.1.33
         version: 7.1.33
-      '@vitejs/plugin-react':
-        specifier: ^4.2.1
-        version: 4.3.0(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0))
       eslint-plugin-prettier:
         specifier: ^5.1.3
         version: 5.1.3(eslint@9.3.0)(prettier@3.2.5)
@@ -87,15 +93,6 @@ importers:
       typescript-eslint:
         specifier: ^7.10.0
         version: 7.10.0(eslint@9.3.0)(typescript@5.4.5)
-      vite:
-        specifier: ^5.2.4
-        version: 5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0)
-      vite-plugin-env-compatible:
-        specifier: ^2.0.1
-        version: 2.0.1
-      vite-plugin-html:
-        specifier: ^3.2.2
-        version: 3.2.2(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0))
 
 packages:
 
@@ -946,9 +943,6 @@ packages:
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
 
-  dotenv-expand@5.1.0:
-    resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
-
   dotenv-expand@8.0.3:
     resolution: {integrity: sha512-SErOMvge0ZUyWd5B0NXMQlDkN+8r+HhVUsxgOO7IoPDOdDRD2JjExpN6y3KnFR66jsJMwSn1pqIivhU5rcJiNg==}
     engines: {node: '>=12'}
@@ -956,10 +950,6 @@ packages:
   dotenv@16.4.5:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
-
-  dotenv@8.2.0:
-    resolution: {integrity: sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==}
-    engines: {node: '>=8'}
 
   ejs@3.1.10:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
@@ -2033,9 +2023,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  vite-plugin-env-compatible@2.0.1:
-    resolution: {integrity: sha512-DRrOZTg/W44ojVQQfGSMPEgYQGzp5TeIpt9cpaK35hTOC/b2D7Ffl8/RIgK8vQ0mlnDIUgETcA173bnMEkyzdw==}
-
   vite-plugin-html@3.2.2:
     resolution: {integrity: sha512-vb9C9kcdzcIo/Oc3CLZVS03dL5pDlOFuhGlZYDCJ840BhWl/0nGeZWf3Qy7NlOayscY4Cm/QRgULCQkEZige5Q==}
     peerDependencies:
@@ -3001,13 +2988,9 @@ snapshots:
       no-case: 3.0.4
       tslib: 2.6.2
 
-  dotenv-expand@5.1.0: {}
-
   dotenv-expand@8.0.3: {}
 
   dotenv@16.4.5: {}
-
-  dotenv@8.2.0: {}
 
   ejs@3.1.10:
     dependencies:
@@ -4212,11 +4195,6 @@ snapshots:
   use-sync-external-store@1.2.2(react@18.3.1):
     dependencies:
       react: 18.3.1
-
-  vite-plugin-env-compatible@2.0.1:
-    dependencies:
-      dotenv: 8.2.0
-      dotenv-expand: 5.1.0
 
   vite-plugin-html@3.2.2(vite@5.2.11(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0)):
     dependencies:

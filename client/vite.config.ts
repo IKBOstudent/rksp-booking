@@ -8,14 +8,14 @@ export default defineConfig(() => {
         plugins: [
             react(),
             createHtmlPlugin({
-                // inject: {
-                //     data: {
-                //         env: {
-                //             NODE_ENV: process.env.NODE_ENV,
-                //             REACT_APP_ENV: process.env.REACT_APP_ENV,
-                //         },
-                //     },
-                // },
+                inject: {
+                    data: {
+                        env: {
+                            NODE_ENV: process.env.NODE_ENV,
+                            REACT_APP_ENV: process.env.REACT_APP_ENV,
+                        },
+                    },
+                },
                 minify: true,
             }),
         ],
@@ -25,12 +25,13 @@ export default defineConfig(() => {
             },
         },
         server: {
-            port: parseInt(process.env.PORT || '3000', 10),
+            port: 3000,
             open: true,
         },
         preview: {
-            port: parseInt(process.env.PORT || '3000', 10),
-            open: true,
+            port: 3000,
+            open: false,
+            host: true,
         },
         build: {
             outDir: 'build',
