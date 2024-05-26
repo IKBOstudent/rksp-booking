@@ -7,8 +7,7 @@
         "build": "prisma generate && tsc",
         "migrate": "prisma migrate dev",
         "dev": "nodemon",
-        "seed:db": "node build/prisma/seed.js",
-        "start": "prisma migrate deploy && npm run seed:db && node build/src/index.js"
+        "start": "prisma migrate deploy && node build/index.js"
     },
     "dependencies": {
         "@prisma/client": "^5.14.0",

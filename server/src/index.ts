@@ -10,8 +10,10 @@ import {
     createToken,
 } from './authMiddleware';
 import { IUser } from './types';
+import { seed } from './seed';
 
 export const prisma = new PrismaClient();
+seed();
 
 const app = express();
 app.use(
@@ -74,7 +76,6 @@ app.post('/api/signin', async (req, res) => {
         const user = await prisma.user.findUnique({ where: { email } });
 
         if (!user) {
-            console.log('no user');
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
