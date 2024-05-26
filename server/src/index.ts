@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { $Enums, PrismaClient } from '@prisma/client';
+import { Role, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import cors from 'cors';
 import {
@@ -16,7 +16,7 @@ export const prisma = new PrismaClient();
 const app = express();
 app.use(
     cors({
-        origin: ['http://localhost:3000'],
+        origin: ['http://localhost'],
         credentials: true,
     }),
 );
@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 
-app.post('/signup', async (req, res) => {
+app.post('/api/signup', async (req, res) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password || !role) {
@@ -64,7 +64,7 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-app.post('/signin', async (req, res) => {
+app.post('/api/signin', async (req, res) => {
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -90,16 +90,21 @@ app.post('/signin', async (req, res) => {
     });
 });
 
-app.get('/users', authMiddleware, roleMiddleware(['ADMIN']), async (_, res) => {
-    try {
-        const users = await prisma.user.findMany();
-        res.status(200).json({ users: users });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch users' });
-    }
-});
+app.get(
+    '/api/users',
+    authMiddleware,
+    roleMiddleware([Role.ADMIN]),
+    async (_, res) => {
+        try {
+            const users = await prisma.user.findMany();
+            res.status(200).json({ users: users });
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to fetch users' });
+        }
+    },
+);
 
-app.get('/profile', authMiddleware, async (req: AuthRequest, res) => {
+app.get('/api/profile', authMiddleware, async (req: AuthRequest, res) => {
     const userId = req.user?.id;
 
     try {
@@ -123,7 +128,7 @@ app.get('/profile', authMiddleware, async (req: AuthRequest, res) => {
     }
 });
 
-app.get('/search_hotels', async (req, res) => {
+app.get('/api/search_hotels', async (req, res) => {
     const { region, checkInDate, checkOutDate, guestCount } = req.query;
 
     if (!region || !checkInDate || !checkOutDate || !guestCount) {
@@ -168,10 +173,10 @@ app.get('/search_hotels', async (req, res) => {
     }
 });
 
-const hotelEditRole = [$Enums.Role.ADMIN, $Enums.Role.PARTNER];
+const hotelEditRole = [Role.ADMIN, Role.PARTNER];
 
 app.post(
-    '/hotel',
+    '/api/hotel',
     authMiddleware,
     roleMiddleware(hotelEditRole),
     async (req: AuthRequest, res) => {
@@ -206,7 +211,7 @@ app.post(
 );
 
 app.put(
-    '/hotel/:id',
+    '/api/hotel/:id',
     authMiddleware,
     roleMiddleware(hotelEditRole),
     async (req: AuthRequest, res) => {
@@ -236,7 +241,7 @@ app.put(
 );
 
 app.delete(
-    '/hotel/:id',
+    '/api/hotel/:id',
     authMiddleware,
     roleMiddleware(hotelEditRole),
     async (req: AuthRequest, res) => {
@@ -264,13 +269,13 @@ app.delete(
 );
 
 app.get(
-    '/hotels',
+    '/api/hotels',
     authMiddleware,
     roleMiddleware(hotelEditRole),
     async (req: AuthRequest, res) => {
         try {
             let hotels;
-            if (req.user?.role === $Enums.Role.ADMIN) {
+            if (req.user?.role === Role.ADMIN) {
                 hotels = await prisma.hotel.findMany();
             } else {
                 hotels = await prisma.hotel.findMany({
@@ -286,7 +291,7 @@ app.get(
     },
 );
 
-app.post('/book', authMiddleware, async (req: AuthRequest, res) => {
+app.post('/api/book', authMiddleware, async (req: AuthRequest, res) => {
     const { hotelId, checkInDate, checkOutDate, guestsCount } = req.body;
 
     try {

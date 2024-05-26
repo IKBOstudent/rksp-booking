@@ -13,7 +13,4 @@ COPY . .
 RUN pnpm install -r --offline
 RUN pnpm run build
 
-FROM base
-
-COPY --from=build . .
 CMD [ "pnpm", "start" ]

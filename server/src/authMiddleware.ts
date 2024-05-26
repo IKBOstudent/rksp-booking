@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { prisma } from '.';
-import { $Enums } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { ITokenData } from './types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';

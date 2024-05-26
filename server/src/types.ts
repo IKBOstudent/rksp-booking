@@ -1,10 +1,10 @@
-import { $Enums } from '@prisma/client';
+import { Role } from '@prisma/client';
 
 export interface IUser {
     id: number;
     name: string;
     email: string;
-    role: $Enums.Role;
+    role: Role;
 }
 
 export interface ITokenData {
