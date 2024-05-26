@@ -23,7 +23,12 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
+
+if (!PORT) {
+    console.log('no PORT env provided');
+    process.exit(1);
+}
 
 app.post('/api/signup', async (req, res) => {
     const { name, email, password, role } = req.body;
@@ -190,6 +195,12 @@ app.post(
             availableRoomsCount,
         } = req.body;
 
+        const owner = req.user?.id;
+
+        if (!owner) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
         try {
             const hotel = await prisma.hotel.create({
                 data: {
@@ -200,7 +211,7 @@ app.post(
                     reviews,
                     features,
                     availableRoomsCount,
-                    owner: req.user!.id,
+                    owner,
                 },
             });
             res.status(201).json(hotel);
@@ -218,11 +229,17 @@ app.put(
         const { id } = req.params;
         const data = req.body;
 
+        const owner = req.user?.id;
+
+        if (!owner) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
         try {
             const hotel = await prisma.hotel.updateMany({
                 where: {
                     id: parseInt(id, 10),
-                    owner: req.user!.id,
+                    owner,
                 },
                 data,
             });
@@ -247,11 +264,17 @@ app.delete(
     async (req: AuthRequest, res) => {
         const { id } = req.params;
 
+        const owner = req.user?.id;
+
+        if (!owner) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
         try {
             const hotel = await prisma.hotel.deleteMany({
                 where: {
                     id: parseInt(id, 10),
-                    owner: req.user!.id,
+                    owner,
                 },
             });
 
@@ -275,12 +298,19 @@ app.get(
     async (req: AuthRequest, res) => {
         try {
             let hotels;
+
+            const owner = req.user?.id;
+
+            if (!owner) {
+                return res.status(403).json({ message: 'Forbidden' });
+            }
+
             if (req.user?.role === Role.ADMIN) {
                 hotels = await prisma.hotel.findMany();
             } else {
                 hotels = await prisma.hotel.findMany({
                     where: {
-                        owner: req.user!.id,
+                        owner,
                     },
                 });
             }
@@ -317,13 +347,19 @@ app.post('/api/book', authMiddleware, async (req: AuthRequest, res) => {
             });
         }
 
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
         const reservation = await prisma.reservation.create({
             data: {
                 hotelId,
                 checkInDate,
                 checkOutDate,
                 guestsCount,
-                userId: req.user!.id,
+                userId,
             },
         });
 

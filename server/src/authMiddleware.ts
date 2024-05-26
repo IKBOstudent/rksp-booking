@@ -4,7 +4,12 @@ import { prisma } from '.';
 import { Role } from '@prisma/client';
 import { ITokenData } from './types';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+    console.log('no JWT_SECRET env provided');
+    process.exit(1);
+}
 
 export const createToken = (user: ITokenData) => {
     return jwt.sign(user, JWT_SECRET, {
@@ -15,7 +20,7 @@ export const createToken = (user: ITokenData) => {
 interface AuthRequest extends Request {
     user?: {
         id: number;
-        role: $Enums.Role;
+        role: Role;
     };
 }
 
@@ -33,7 +38,7 @@ const authMiddleware = async (
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as {
             userId: number;
-            role: $Enums.Role;
+            role: Role;
         };
 
         const user = await prisma.user.findUnique({
@@ -50,7 +55,7 @@ const authMiddleware = async (
     }
 };
 
-const roleMiddleware = (roles: $Enums.Role[]) => {
+const roleMiddleware = (roles: Role[]) => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!req.user || !roles.includes(req.user.role)) {
             return res.status(403).json({ message: 'Forbidden' });
