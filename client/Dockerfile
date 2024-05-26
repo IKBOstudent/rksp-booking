@@ -7,6 +7,8 @@ COPY pnpm-lock.yaml .
 RUN pnpm fetch
 COPY . .
 RUN pnpm install -r --offline
+
+ENV NODE_ENV=production
 RUN pnpm run build
 
 FROM nginx:stable-alpine
