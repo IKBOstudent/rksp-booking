@@ -16,19 +16,17 @@ export const prisma = new PrismaClient();
 const app = express();
 app.use(
     cors({
-        origin: ['http://localhost'],
+        origin: [`http://front`],
         credentials: true,
     }),
 );
 app.use(express.json());
 app.use(cookieParser());
 
-const PORT = process.env.PORT;
-
-if (!PORT) {
-    console.log('no PORT env provided');
-    process.exit(1);
-}
+app.all('*', (req, _, next) => {
+    console.log(req.method, decodeURI(req.url), 'from:', req.headers.host);
+    next();
+});
 
 app.post('/api/signup', async (req, res) => {
     const { name, email, password, role } = req.body;
@@ -70,29 +68,34 @@ app.post('/api/signup', async (req, res) => {
 });
 
 app.post('/api/signin', async (req, res) => {
-    const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({ where: { email } });
+        const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user) {
-        return res.status(401).json({ error: 'Invalid email or password' });
+        if (!user) {
+            console.log('no user');
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        const token = createToken({ id: user.id, role: user.role });
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 1);
+        res.cookie('jwt', token, { expires });
+
+        res.status(200).json({
+            message: 'Signed in successfully',
+            user: { id: user.id, name: user.name, role: user.role },
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Error signing in' });
     }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-        return res.status(401).json({ error: 'Invalid email or password' });
-    }
-
-    const token = createToken({ id: user.id, role: user.role });
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 1);
-    res.cookie('jwt', token, { expires });
-
-    res.status(200).json({
-        message: 'Signed in successfully',
-        user: { id: user.id, name: user.name, role: user.role },
-    });
 });
 
 app.get(
@@ -104,7 +107,7 @@ app.get(
             const users = await prisma.user.findMany();
             res.status(200).json({ users: users });
         } catch (error) {
-            res.status(500).json({ error: 'Failed to fetch users' });
+            res.status(500).json({ error: 'Failed to get users' });
         }
     },
 );
@@ -129,7 +132,7 @@ app.get('/api/profile', authMiddleware, async (req: AuthRequest, res) => {
 
         res.status(200).json({ user });
     } catch (error) {
-        res.status(500).json({ error: 'Error retrieving user profile' });
+        res.status(500).json({ error: 'Error retrieving user data' });
     }
 });
 
@@ -368,6 +371,13 @@ app.post('/api/book', authMiddleware, async (req: AuthRequest, res) => {
         res.status(500).json({ error: 'Failed to create reservation' });
     }
 });
+
+const PORT = process.env.PORT;
+
+if (!PORT) {
+    console.log('no PORT env provided');
+    process.exit(1);
+}
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

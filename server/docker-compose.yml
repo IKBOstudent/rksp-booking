@@ -18,10 +18,12 @@ services:
     server:
         build: .
         container_name: server
+        restart: unless-stopped
         depends_on:
             - db
         networks:
             - dbnet
+            - default
         environment:
             - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public&sslmode=disable
             - PORT=${PORT}
@@ -33,4 +35,7 @@ volumes:
     pg-data:
 
 networks:
-  dbnet:
+    dbnet:
+    default:
+        external: true
+        name: external-server 

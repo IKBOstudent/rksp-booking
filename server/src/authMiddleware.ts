@@ -37,21 +37,22 @@ const authMiddleware = async (
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as {
-            userId: number;
+            id: number;
             role: Role;
         };
 
         const user = await prisma.user.findUnique({
-            where: { id: decoded.userId },
+            where: { id: decoded.id },
         });
 
         if (!user) {
+            console.log('somehow no user');
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        req.user = { id: decoded.userId, role: decoded.role };
+        req.user = { id: decoded.id, role: decoded.role };
         next();
     } catch (error) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(500).json({ message: 'Error occured' });
     }
 };
 
