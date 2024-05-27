@@ -1,10 +1,22 @@
 import { DatePicker } from '@gravity-ui/date-components';
 import { DateTime, dateTime } from '@gravity-ui/date-utils';
-import { Button, Card, Flex, TextInput } from '@gravity-ui/uikit';
-import { useEffect } from 'react';
+import {
+    Button,
+    Card,
+    Flex,
+    List,
+    ListItemData,
+    Popup,
+    TextInput,
+} from '@gravity-ui/uikit';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useSearchHotelsMutation } from '~/store/features/hotels/hotelApi';
+import {
+    useSearchHotelsMutation,
+    useSuggestHotelsQuery,
+} from '~/store/features/hotels/hotelApi';
 import { setOffers } from '~/store/features/hotels/hotelSlice';
+import { Suggestion } from '~/store/features/hotels/types';
 import { useAppDispatch } from '~/store/store';
 
 interface FormData {
@@ -16,10 +28,17 @@ interface FormData {
 
 export const SearchForm = () => {
     const dispatch = useAppDispatch();
+    const ref = useRef<HTMLInputElement>(null);
     const [search, { isLoading }] = useSearchHotelsMutation();
 
-    const { register, control, getValues, handleSubmit, setFocus } =
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+
+    const { register, control, getValues, handleSubmit, setFocus, setValue } =
         useForm<FormData>();
+
+    const { data: suggestData, isFetching } = useSuggestHotelsQuery(
+        getValues('destination'),
+    );
 
     useEffect(() => {
         setFocus('destination');
@@ -50,18 +69,49 @@ export const SearchForm = () => {
         dispatch(setOffers(data.hotels));
     };
 
+    const handleSuggestSelect = (item: ListItemData<Suggestion>) => {
+        setValue('destination', item.name);
+    };
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Flex>
-                <TextInput
-                    type="text"
-                    size="xl"
-                    pin="round-brick"
-                    style={{ width: '30%' }}
-                    placeholder="Москва"
-                    label="Куда:"
-                    {...register('destination')}
+                <Controller
+                    name="destination"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                        <TextInput
+                            type="text"
+                            size="xl"
+                            pin="round-brick"
+                            style={{ width: '30%' }}
+                            placeholder="Москва"
+                            label="Куда:"
+                            ref={ref}
+                            value={field.value}
+                            onUpdate={field.onChange}
+                            onBlur={() => setShowPopup(false)}
+                            onFocus={() => setShowPopup(true)}
+                        />
+                    )}
                 />
+
+                {suggestData && (
+                    <Popup
+                        anchorRef={ref}
+                        placement="bottom-start"
+                        open={showPopup}
+                        onClose={() => setShowPopup(false)}
+                    >
+                        <List
+                            items={suggestData.suggestions}
+                            virtualized
+                            itemsHeight={150}
+                            onItemClick={handleSuggestSelect}
+                        />
+                    </Popup>
+                )}
 
                 <Controller
                     name="startDate"

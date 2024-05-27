@@ -1,5 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IBookData, IHotel, IReservation, ISearchParams } from './types';
+import {
+    IBookData,
+    IHotel,
+    IReservation,
+    ISearchParams,
+    Suggestion,
+} from './types';
 
 export const hotelsApi = createApi({
     reducerPath: 'hotelsApi',
@@ -32,6 +38,12 @@ export const hotelsApi = createApi({
                 body: reservationData,
             }),
         }),
+        suggestHotels: builder.query<{ suggestions: Suggestion[] }, string>({
+            query: (input) => ({
+                url: '/suggest_hotels',
+                params: { input },
+            }),
+        }),
     }),
 });
 
@@ -40,4 +52,5 @@ export const {
     useSearchHotelsMutation,
     useAddHotelMutation,
     useBookHotelMutation,
+    useSuggestHotelsQuery,
 } = hotelsApi;

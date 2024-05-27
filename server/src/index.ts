@@ -166,21 +166,21 @@ app.get('/api/search_hotels', async (req, res) => {
     try {
         const hotels = await prisma.hotel.findMany({
             where: {
-                region: region as string,
+                region: region.toString(),
                 availableRoomsCount: {
-                    gte: parseInt(guestCount as string),
+                    gte: parseInt(guestCount.toString(), 10),
                 },
                 reservations: {
                     every: {
                         OR: [
                             {
                                 checkInDate: {
-                                    gt: new Date(checkOutDate as string),
+                                    gt: new Date(checkOutDate.toString()),
                                 },
                             },
                             {
                                 checkOutDate: {
-                                    lt: new Date(checkInDate as string),
+                                    lt: new Date(checkInDate.toString()),
                                 },
                             },
                         ],
@@ -387,6 +387,32 @@ app.post('/api/book', authMiddleware, async (req: AuthRequest, res) => {
         res.status(201).json(reservation);
     } catch (error) {
         res.status(500).json({ error: 'Failed to create reservation' });
+    }
+});
+
+app.get('/suggest_hotels', async (req, res) => {
+    const { input } = req.query;
+
+    try {
+        const condition = {
+            name: {
+                contains: input?.toString().trim(),
+                mode: 'insensitive',
+            },
+        };
+
+        const suggestions = await prisma.region.findMany({
+            where: input ? condition : undefined,
+            select: {
+                id: true,
+                name: true,
+            },
+            take: 5,
+        });
+
+        res.status(200).json({ suggestions });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to process suggestions' });
     }
 });
 

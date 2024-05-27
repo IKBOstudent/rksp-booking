@@ -38,3 +38,8 @@ export interface IBookData {
     checkOutDate: Date;
     guestsCount: number;
 }
+
+export interface Suggestion {
+    id: number;
+    name: string;
+}
