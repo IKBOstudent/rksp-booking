@@ -1,8 +1,8 @@
 import { Button, Card, Flex, Icon, Label, Text } from '@gravity-ui/uikit';
 import { ArrowUpRightFromSquare, Check, Link, Star } from '@gravity-ui/icons';
-import { IOffer } from '~/types/search/types';
+import { IHotel } from '~/store/features/hotels/types';
 
-interface IHotelCardProps extends Omit<IOffer, 'id'> {}
+interface IHotelCardProps extends Omit<IHotel, 'id'> {}
 
 const DEFAULT_HOTEL_IMAGE =
     'https://jkfenner.com/wp-content/uploads/2019/11/default.jpg';
@@ -10,7 +10,7 @@ const DEFAULT_HOTEL_IMAGE =
 export const HotelCard = ({
     name,
     rating,
-    image,
+    imageUrl,
     price,
     features,
 }: IHotelCardProps) => {
@@ -18,7 +18,7 @@ export const HotelCard = ({
         <Card view="filled" style={{ padding: 8 }}>
             <Flex gap={4}>
                 <img
-                    src={image}
+                    src={imageUrl}
                     alt="отель"
                     width={200}
                     height={200}

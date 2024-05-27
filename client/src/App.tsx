@@ -3,13 +3,20 @@ import { Provider } from 'react-redux';
 import RootComponent from './RootComponent';
 import { store } from './store/store';
 
-import { ThemeProvider } from '@gravity-ui/uikit';
+import {
+    ThemeProvider,
+    ToasterComponent,
+    ToasterProvider,
+} from '@gravity-ui/uikit';
 
 const App: React.FC = () => {
     return (
         <Provider store={store}>
             <ThemeProvider theme="light">
-                <RootComponent />
+                <ToasterProvider>
+                    <RootComponent />
+                    <ToasterComponent />
+                </ToasterProvider>
             </ThemeProvider>
         </Provider>
     );

@@ -28,6 +28,7 @@ model Hotel {
     name                String
     region              String
     imageUrl            String
+    price               Int
     rating              Float
     reviews             Int
     features            Feature[]

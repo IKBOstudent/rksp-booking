@@ -4,6 +4,7 @@ import { EUserRole, IUser, ILoginUserData, IRegisterUserData } from './types';
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
+        baseUrl: import.meta.env.VITE_DEV_SERVER,
         credentials: 'include',
     }),
     endpoints: (builder) => ({
@@ -32,6 +33,12 @@ export const authApi = createApi({
         users: builder.query<{ users: IUser[] }, void>({
             query: () => '/api/users',
         }),
+        delete: builder.mutation<{}, number>({
+            query: (id) => ({
+                url: `/api/user/${id}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
@@ -40,4 +47,5 @@ export const {
     useRegisterMutation,
     useProfileQuery,
     useUsersQuery,
+    useDeleteMutation,
 } = authApi;

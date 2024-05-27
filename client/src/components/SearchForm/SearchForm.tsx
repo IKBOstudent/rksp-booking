@@ -1,7 +1,11 @@
 import { DatePicker } from '@gravity-ui/date-components';
 import { DateTime, dateTime } from '@gravity-ui/date-utils';
 import { Button, Card, Flex, TextInput } from '@gravity-ui/uikit';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useSearchHotelsMutation } from '~/store/features/hotels/hotelApi';
+import { setOffers } from '~/store/features/hotels/hotelSlice';
+import { useAppDispatch } from '~/store/store';
 
 interface FormData {
     destination: string;
@@ -11,89 +15,119 @@ interface FormData {
 }
 
 export const SearchForm = () => {
-    const { control, getValues, handleSubmit } = useForm<FormData>();
+    const dispatch = useAppDispatch();
+    const [search, { isLoading }] = useSearchHotelsMutation();
 
-    console.log(getValues());
+    const { register, control, getValues, handleSubmit, setFocus } =
+        useForm<FormData>();
+
+    useEffect(() => {
+        setFocus('destination');
+    }, []);
+
+    const onSubmit = async ({
+        destination,
+        startDate,
+        endDate,
+        guestsCount,
+    }: FormData) => {
+        const checkInDate = startDate?.format('MM/DD/YYYY');
+        const checkOutDate = endDate?.format('MM/DD/YYYY');
+
+        if (!checkInDate || !checkOutDate) {
+            return;
+        }
+
+        const searchParams = {
+            region: destination,
+            checkInDate,
+            checkOutDate,
+            guestsCount,
+        };
+        console.log(searchParams);
+
+        const data = await search(searchParams).unwrap();
+        dispatch(setOffers(data.hotels));
+    };
+
     return (
-        <Card view="filled" style={{ padding: 16 }}>
-            <form onSubmit={handleSubmit(console.log)}>
-                <Flex>
-                    <Controller
-                        name="destination"
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                            <TextInput
-                                type="text"
-                                size="l"
-                                placeholder="Москва"
-                                label="Куда:"
-                                pin="round-brick"
-                                style={{ width: '30%' }}
-                                {...field}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="startDate"
-                        control={control}
-                        defaultValue={null}
-                        render={({ field }) => (
-                            <DatePicker
-                                size="l"
-                                placeholder="Дата заезда"
-                                pin="brick-brick"
-                                style={{ width: '20%' }}
-                                minValue={dateTime()}
-                                onUpdate={field.onChange}
-                                value={field.value}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="endDate"
-                        control={control}
-                        defaultValue={null}
-                        render={({ field }) => (
-                            <DatePicker
-                                size="l"
-                                placeholder="Дата выезда"
-                                pin="brick-brick"
-                                style={{ width: '20%' }}
-                                minValue={getValues().startDate ?? undefined}
-                                disabled={!getValues().startDate}
-                                onUpdate={field.onChange}
-                                value={field.value}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="guestsCount"
-                        control={control}
-                        defaultValue={2}
-                        render={({ field }) => (
-                            <TextInput
-                                type="number"
-                                size="l"
-                                label="Гостей:"
-                                pin="brick-brick"
-                                style={{ width: '20%' }}
-                                onChange={field.onChange}
-                                value={field.value.toString()}
-                            />
-                        )}
-                    />
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Flex>
+                <TextInput
+                    type="text"
+                    size="xl"
+                    pin="round-brick"
+                    style={{ width: '30%' }}
+                    placeholder="Москва"
+                    label="Куда:"
+                    {...register('destination')}
+                />
 
-                    <Button
-                        pin="brick-round"
-                        size="l"
-                        view="action"
-                        style={{ width: '10%' }}
-                    >
-                        Найти
-                    </Button>
-                </Flex>
-            </form>
-        </Card>
+                <Controller
+                    name="startDate"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                        <DatePicker
+                            size="xl"
+                            pin="brick-brick"
+                            style={{ width: '20%' }}
+                            placeholder="Дата заезда"
+                            minValue={dateTime()}
+                            value={field.value}
+                            onUpdate={field.onChange}
+                        />
+                    )}
+                />
+                <Controller
+                    name="endDate"
+                    control={control}
+                    rules={{ required: true }}
+                    defaultValue={null}
+                    render={({ field }) => (
+                        <DatePicker
+                            size="xl"
+                            pin="brick-brick"
+                            style={{ width: '20%' }}
+                            placeholder="Дата выезда"
+                            value={field.value}
+                            onUpdate={field.onChange}
+                            minValue={getValues('startDate') ?? undefined}
+                            disabled={getValues('startDate') === null}
+                        />
+                    )}
+                />
+                <Controller
+                    name="guestsCount"
+                    control={control}
+                    rules={{ required: true }}
+                    defaultValue={2}
+                    render={({ field }) => (
+                        <TextInput
+                            type="number"
+                            size="xl"
+                            pin="brick-brick"
+                            style={{ width: '20%' }}
+                            label="Гостей:"
+                            onUpdate={(value) =>
+                                field.onChange(parseInt(value, 10))
+                            }
+                            value={field.value.toString()}
+                        />
+                    )}
+                />
+
+                <Button
+                    type="submit"
+                    pin="brick-round"
+                    size="xl"
+                    view="action"
+                    style={{ width: '10%' }}
+                    loading={isLoading}
+                >
+                    Найти
+                </Button>
+            </Flex>
+        </form>
     );
 };

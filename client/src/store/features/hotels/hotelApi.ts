@@ -4,15 +4,17 @@ import { IBookData, IHotel, IReservation, ISearchParams } from './types';
 export const hotelsApi = createApi({
     reducerPath: 'hotelsApi',
     baseQuery: fetchBaseQuery({
+        baseUrl: import.meta.env.VITE_DEV_SERVER,
         credentials: 'include',
     }),
     endpoints: (builder) => ({
         getHotels: builder.query<{ hotels: IHotel[] }, void>({
             query: () => '/api/hotels',
         }),
-        searchHotels: builder.query<{ hotels: IHotel[] }, ISearchParams>({
+        searchHotels: builder.mutation<{ hotels: IHotel[] }, ISearchParams>({
             query: (searchParams) => ({
-                url: '/api/hotels/search',
+                url: '/api/search_hotels',
+                method: 'GET',
                 params: searchParams,
             }),
         }),
@@ -35,7 +37,7 @@ export const hotelsApi = createApi({
 
 export const {
     useGetHotelsQuery,
-    useSearchHotelsQuery,
+    useSearchHotelsMutation,
     useAddHotelMutation,
     useBookHotelMutation,
 } = hotelsApi;

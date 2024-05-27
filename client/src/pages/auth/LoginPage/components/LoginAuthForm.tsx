@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { PasswordInput } from '@gravity-ui/components';
-import { Alert, Button, Checkbox, Flex, TextInput } from '@gravity-ui/uikit';
+import { Alert, Button, Text, Flex, TextInput } from '@gravity-ui/uikit';
 import { useNavigate } from 'react-router-dom';
 import URLs from '~/constants/URLs';
 import { ILoginUserData } from '~/store/features/auth/types';
@@ -27,19 +27,15 @@ export const LoginAuthForm: React.FC<LoginAuthFormProps> = ({
     } = useForm<ILoginUserData>();
 
     const internalOnSubmit = async (data: ILoginUserData) => {
-        try {
-            await onSubmit(data);
+        await onSubmit(data);
 
-            reset();
-            navigate(URLs.HomeRoot);
-        } catch {
-            // ignore
-        }
+        reset();
+        navigate(URLs.HomeRoot);
     };
 
     return (
         <form onSubmit={handleSubmit(internalOnSubmit)}>
-            <Flex gap={2} direction="column">
+            <Flex gap={3} direction="column">
                 {error && (
                     <Alert
                         theme="danger"
@@ -49,7 +45,7 @@ export const LoginAuthForm: React.FC<LoginAuthFormProps> = ({
                 )}
                 <TextInput
                     {...registerField('email')}
-                    size="l"
+                    size="xl"
                     type="email"
                     placeholder="Email"
                 />
@@ -61,19 +57,19 @@ export const LoginAuthForm: React.FC<LoginAuthFormProps> = ({
                         <PasswordInput
                             value={field.value}
                             onUpdate={field.onChange}
-                            size="l"
+                            size="xl"
                             placeholder="Пароль"
                         />
                     )}
                 />
                 <Button
-                    size="l"
+                    size="xl"
                     view="action"
                     loading={isLoading}
                     type="submit"
                     disabled={!isValid}
                 >
-                    Войти
+                    <Text variant="subheader-2">Войти</Text>
                 </Button>
             </Flex>
         </form>

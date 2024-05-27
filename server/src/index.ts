@@ -18,7 +18,7 @@ seed();
 const app = express();
 app.use(
     cors({
-        origin: [`http://front`],
+        origin: ['http://front', 'http://localhost:3000'],
         credentials: true,
     }),
 );
@@ -106,6 +106,23 @@ app.get(
     async (_, res) => {
         try {
             const users = await prisma.user.findMany();
+            res.status(200).json({ users: users });
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to get users' });
+        }
+    },
+);
+
+app.delete(
+    '/api/user/:id',
+    authMiddleware,
+    roleMiddleware([Role.ADMIN]),
+    async (req, res) => {
+        const { id } = req.params;
+        try {
+            const users = await prisma.user.delete({
+                where: { role: { not: Role.ADMIN }, id: parseInt(id, 10) },
+            });
             res.status(200).json({ users: users });
         } catch (error) {
             res.status(500).json({ error: 'Failed to get users' });
@@ -240,7 +257,7 @@ app.put(
         }
 
         try {
-            const hotel = await prisma.hotel.updateMany({
+            const hotel = await prisma.hotel.update({
                 where: {
                     id: parseInt(id, 10),
                     owner,
@@ -248,9 +265,9 @@ app.put(
                 data,
             });
 
-            if (hotel.count === 0) {
-                return res.status(403).json({
-                    error: 'You do not have permission to update this hotel or hotel does not exist',
+            if (!hotel) {
+                return res.status(404).json({
+                    error: 'hotel does not exist',
                 });
             }
 
@@ -275,16 +292,16 @@ app.delete(
         }
 
         try {
-            const hotel = await prisma.hotel.deleteMany({
+            const hotel = await prisma.hotel.delete({
                 where: {
                     id: parseInt(id, 10),
                     owner,
                 },
             });
 
-            if (hotel.count === 0) {
-                return res.status(403).json({
-                    error: 'You do not have permission to delete this hotel or hotel does not exist',
+            if (!hotel) {
+                return res.status(404).json({
+                    error: 'hotel does not exist',
                 });
             }
 
@@ -328,6 +345,12 @@ app.get(
 app.post('/api/book', authMiddleware, async (req: AuthRequest, res) => {
     const { hotelId, checkInDate, checkOutDate, guestsCount } = req.body;
 
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
     try {
         const overlappingReservations = await prisma.reservation.findMany({
             where: {
@@ -349,12 +372,6 @@ app.post('/api/book', authMiddleware, async (req: AuthRequest, res) => {
             return res.status(409).json({
                 message: 'No rooms available for the selected dates.',
             });
-        }
-
-        const userId = req.user?.id;
-
-        if (!userId) {
-            return res.status(403).json({ message: 'Forbidden' });
         }
 
         const reservation = await prisma.reservation.create({

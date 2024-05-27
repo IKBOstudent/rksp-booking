@@ -12,6 +12,7 @@ import { useAppDispatch } from './store/store';
 import { setUser } from './store/features/auth/authSlice';
 import { Spin } from '@gravity-ui/uikit';
 import { BookingPage } from './pages/book/BookingPage';
+import { MainLoader } from './components/MainLoader/MainLoader';
 
 const RootComponent: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -24,7 +25,7 @@ const RootComponent: React.FC = () => {
     }, [data]);
 
     if (isLoading) {
-        return <Spin size="xl" />;
+        return <MainLoader />;
     }
     return (
         <Router>

@@ -1,18 +1,26 @@
-import { Loader, Table, withTableSelection } from '@gravity-ui/uikit';
+import {
+    Flex,
+    Loader,
+    Table,
+    TableActionConfig,
+    Text,
+    useToaster,
+    withTableActions,
+} from '@gravity-ui/uikit';
 import React from 'react';
-import { useUsersQuery } from '~/store/features/auth/authApi';
-import { IUser } from '~/store/features/auth/types';
+import {
+    useDeleteMutation,
+    useUsersQuery,
+} from '~/store/features/auth/authApi';
+import { EUserRole, IUser } from '~/store/features/auth/types';
 
-const TableWithActions = withTableSelection(Table);
+const TableWithActions = withTableActions<IUser>(Table);
 
-interface TableData {
-    id: string;
-    text: string;
-}
+const AdminTable: React.FC = () => {
+    const toaster = useToaster();
 
-const AdminTable = () => {
-    const { data, error, isLoading } = useUsersQuery();
-    const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
+    const { data, isLoading } = useUsersQuery();
+    const [deleteUser] = useDeleteMutation();
 
     const tableData: IUser[] = data?.users.map((user) => user) || [];
     const columns = [
@@ -22,19 +30,44 @@ const AdminTable = () => {
         { id: 'role', name: 'Role' },
     ];
 
+    const handleDeleteUser = async (user: IUser) => {
+        try {
+            await deleteUser(user.id);
+            toaster.add({
+                name: 'Successfully deleted user',
+                theme: 'success',
+            });
+        } catch (err) {
+            toaster.add({ name: 'Error while deleting user', theme: 'danger' });
+        }
+    };
+
+    const getRowActions = (user: IUser): TableActionConfig<IUser>[] => {
+        if (user.role === EUserRole.ADMIN) {
+            return [];
+        }
+        return [
+            {
+                text: 'Delete',
+                handler: handleDeleteUser,
+                theme: 'danger',
+            },
+        ];
+    };
+
     if (isLoading) {
         return <Loader size="m" />;
     }
 
     return (
-        <div style={{ marginTop: 24 }}>
+        <Flex direction="column" gap={2}>
+            <Text variant="subheader-3">Данные о пользователях</Text>
             <TableWithActions
                 columns={columns}
                 data={tableData}
-                selectedIds={selectedIds}
-                onSelectionChange={setSelectedIds}
+                getRowActions={getRowActions}
             />
-        </div>
+        </Flex>
     );
 };
 

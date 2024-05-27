@@ -13,26 +13,30 @@ export const RegisterPage: React.FC = () => {
     const [register, { isLoading, error }] = useRegisterMutation();
 
     const onSubmit = async (userData: IRegisterUserData) => {
-        const user = await register(userData).unwrap();
-        dispatch(setUser(user.user));
+        const data = await register(userData).unwrap();
+        dispatch(setUser(data.user));
     };
 
     return (
-        <Card
-            style={{ padding: 12, marginTop: 48, maxWidth: 400 }}
-            view="filled"
-        >
-            <Flex direction="column" gap={2}>
+        <Flex justifyContent="center">
+            <Flex
+                style={{ paddingTop: 48, minWidth: 240, width: 320 }}
+                direction="column"
+                gap={3}
+            >
                 <Text variant="header-1">Создание аккаунта</Text>
                 <RegisterAuthForm
                     isLoading={isLoading}
                     error={error}
                     onSubmit={onSubmit}
                 />
-                <Text style={{ marginTop: 8 }}>
-                    Уже есть аккаунт? <Link to={URLs.Login}>Войти</Link>
+                <Text>
+                    Уже есть аккаунт?
+                    <Link to={URLs.Login} style={{ marginLeft: 8 }}>
+                        Войти
+                    </Link>
                 </Text>
             </Flex>
-        </Card>
+        </Flex>
     );
 };

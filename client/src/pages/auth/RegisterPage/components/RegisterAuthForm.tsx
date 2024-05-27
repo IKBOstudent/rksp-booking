@@ -1,7 +1,14 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { PasswordInput } from '@gravity-ui/components';
-import { Alert, Button, Checkbox, Flex, TextInput } from '@gravity-ui/uikit';
+import {
+    Alert,
+    Button,
+    Checkbox,
+    Flex,
+    TextInput,
+    Text,
+} from '@gravity-ui/uikit';
 import { useNavigate } from 'react-router-dom';
 import URLs from '~/constants/URLs';
 import { IRegisterUserData } from '~/store/features/auth/types';
@@ -27,19 +34,15 @@ export const RegisterAuthForm: React.FC<RegisterAuthFormProps> = ({
     } = useForm<IRegisterUserData>();
 
     const internalOnSubmit = async (data: IRegisterUserData) => {
-        try {
-            await onSubmit(data);
+        await onSubmit(data);
 
-            reset();
-            navigate(URLs.HomeRoot);
-        } catch {
-            // ignore
-        }
+        reset();
+        navigate(URLs.HomeRoot);
     };
 
     return (
         <form onSubmit={handleSubmit(internalOnSubmit)}>
-            <Flex gap={2} direction="column">
+            <Flex gap={3} direction="column">
                 {error && (
                     <Alert
                         theme="danger"
@@ -49,13 +52,13 @@ export const RegisterAuthForm: React.FC<RegisterAuthFormProps> = ({
                 )}
                 <TextInput
                     {...register('name')}
-                    size="l"
+                    size="xl"
                     type="text"
                     placeholder="Имя"
                 />
                 <TextInput
                     {...register('email')}
-                    size="l"
+                    size="xl"
                     type="email"
                     placeholder="Email"
                 />
@@ -67,20 +70,20 @@ export const RegisterAuthForm: React.FC<RegisterAuthFormProps> = ({
                         <PasswordInput
                             value={field.value}
                             onUpdate={field.onChange}
-                            size="l"
+                            size="xl"
                             placeholder="Пароль"
                         />
                     )}
                 />
                 <Checkbox {...register('isPartner')}>Отельер</Checkbox>
                 <Button
-                    size="l"
+                    size="xl"
                     view="action"
                     loading={isLoading}
                     type="submit"
                     disabled={!isValid}
                 >
-                    Создать новый аккаунт
+                    <Text variant="subheader-2">Создать новый аккаунт</Text>
                 </Button>
             </Flex>
         </form>

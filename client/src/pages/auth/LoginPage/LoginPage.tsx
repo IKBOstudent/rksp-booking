@@ -14,16 +14,17 @@ export const LoginPage: React.FC = () => {
     const [login, { isLoading, error }] = useLoginMutation();
 
     const onSubmit = async (userData: ILoginUserData) => {
-        const user = await login(userData).unwrap();
-        dispatch(setUser(user.user));
+        const data = await login(userData).unwrap();
+        dispatch(setUser(data.user));
     };
 
     return (
-        <Card
-            style={{ padding: 12, marginTop: 48, maxWidth: 400 }}
-            view="filled"
-        >
-            <Flex direction="column" gap={2}>
+        <Flex justifyContent="center">
+            <Flex
+                style={{ paddingTop: 48, minWidth: 240, width: 320 }}
+                direction="column"
+                gap={3}
+            >
                 <Text variant="header-1">Вход</Text>
                 <LoginAuthForm
                     isLoading={isLoading}
@@ -31,10 +32,12 @@ export const LoginPage: React.FC = () => {
                     onSubmit={onSubmit}
                 />
                 <Text>
-                    Новый пользователь?{' '}
-                    <Link to={URLs.Register}>Зарегистрироваться</Link>
+                    Новый пользователь?
+                    <Link to={URLs.Register} style={{ marginLeft: 8 }}>
+                        Зарегистрироваться
+                    </Link>
                 </Text>
             </Flex>
-        </Card>
+        </Flex>
     );
 };

@@ -9,6 +9,7 @@ export interface IHotel {
     name: string;
     region: string;
     imageUrl: string;
+    price: number;
     rating: number;
     reviews: number;
     features: IFeature[];
@@ -26,8 +27,8 @@ export interface IReservation {
 
 export interface ISearchParams {
     region: string;
-    checkInDate: Date;
-    checkOutDate: Date;
+    checkInDate: string;
+    checkOutDate: string;
     guestsCount: number;
 }
 

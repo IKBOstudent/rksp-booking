@@ -1,6 +1,7 @@
 import {
     Button,
     Card,
+    Container,
     Flex,
     Icon,
     Label,
@@ -35,43 +36,37 @@ export const ProfilePage: React.FC = () => {
     const { name, email, role } = user;
 
     return (
-        <>
+        <Container maxWidth="m">
             <Header />
-            <Card style={{ padding: 12 }}>
-                <Flex direction="column" gap={1}>
-                    <Text variant="header-1">
-                        Профиль пользователя
-                        {role === 'ADMIN' && (
-                            <Label theme="danger">Админ</Label>
-                        )}
-                        {role === 'PARTNER' && (
-                            <Label theme="warning">Отельер</Label>
-                        )}
-                    </Text>
+            <Flex
+                direction="column"
+                gap={2}
+                style={{ marginTop: 48, marginBottom: 32 }}
+            >
+                <Flex gap={2} alignItems="center">
+                    <Text variant="header-1">Профиль пользователя</Text>
 
-                    <TextInput
-                        view="clear"
-                        size="xl"
-                        label="Имя"
-                        defaultValue={name}
-                    />
-                    <TextInput
-                        view="clear"
-                        size="xl"
-                        label="Эл. почта "
-                        defaultValue={email}
-                    />
-                    <Button
-                        onClick={handleLogout}
-                        view="outlined-danger"
-                        style={{ width: 'fit-content' }}
-                    >
-                        Выйти из аккаунта{' '}
-                        <Icon data={ArrowRightFromSquare} size={18} />
-                    </Button>
+                    {role === 'ADMIN' && <Label theme="danger">Админ</Label>}
+
+                    {role === 'PARTNER' && (
+                        <Label theme="warning">Отельер</Label>
+                    )}
                 </Flex>
-            </Card>
+
+                <TextInput size="l" label="Имя" defaultValue={name} />
+                <TextInput size="l" label="Эл. почта " defaultValue={email} />
+                <Button
+                    onClick={handleLogout}
+                    view="flat-danger"
+                    selected
+                    style={{ width: 'fit-content' }}
+                >
+                    Выйти из аккаунта
+                    <Icon data={ArrowRightFromSquare} size={18} />
+                </Button>
+            </Flex>
+
             {role === 'ADMIN' && <AdminTable />}
-        </>
+        </Container>
     );
 };
