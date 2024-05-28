@@ -5,9 +5,9 @@ export interface IHotel {
     images: string[];
     rating: number;
     reviews: number;
-    features: IFeature[];
-    rooms: IRoom[];
-    Region: ISuggestion;
+    features?: IFeature[];
+    rooms?: IRoom[];
+    Region?: ISuggestion;
 }
 
 export interface IFeature {
@@ -19,15 +19,16 @@ export interface IFeature {
 export interface IRoom {
     id: number;
     nightPrice: number;
-    maximumGuestsCount: number;
+    maximumGuests: number;
+    type: string;
     hotelId: number;
-    reservations: IReservation[];
+    reservations?: IReservation[];
 }
 
 export interface IReservation {
     id: number;
-    checkInDate: Date;
-    checkOutDate: Date;
+    checkInDate: string;
+    checkOutDate: string;
     userId: number;
     roomId: number;
 }

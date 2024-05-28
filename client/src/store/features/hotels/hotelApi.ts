@@ -22,6 +22,9 @@ export const hotelsApi = createApi({
         getHotel: builder.query<{ hotel: IHotel }, number>({
             query: (id) => `/api/hotel/${id}`,
         }),
+        getOwnHotels: builder.query<{ hotels: IHotel[] }, void>({
+            query: () => `/api/hotels`,
+        }),
         addHotel: builder.mutation<{ hotel: IHotel }, HotelPayload>({
             query: (newHotel) => ({
                 url: '/api/hotel',
@@ -35,7 +38,7 @@ export const hotelsApi = createApi({
         >({
             query: ({ id, hotelData }) => ({
                 url: `/api/hotel/${id}`,
-                method: 'PUT',
+                method: 'PATCH',
                 body: hotelData,
             }),
         }),
@@ -101,8 +104,14 @@ export const hotelsApi = createApi({
 
 export const {
     useGetHotelQuery,
+    useGetOwnHotelsQuery,
     useSearchHotelsMutation,
     useAddHotelMutation,
     useBookHotelMutation,
     useSuggestHotelsMutation,
+
+    useAddFeatureMutation,
+    useDeleteFeatureMutation,
+    useAddRoomMutation,
+    useDeleteRoomMutation,
 } = hotelsApi;

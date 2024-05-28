@@ -1,0 +1,86 @@
+[
+    {
+        "name": "Отель Балчуг Кемпински",
+        "regionId": 1,
+        "images": [
+            "https://cdn.worldota.net/t/640x400/extranet/media/eaa77eaeb7de49c7ac823092b118ae37.jpg",
+            "https://cdn.worldota.net/t/640x400/extranet/ca/16/ca16ec27141fbe409661cb6b861e3703a86a2e20.jpeg",
+            "https://cdn.worldota.net/t/640x400/extranet/45/2c/452c15a9c6887360c443c88eddb87ebd259c04d7.jpeg"
+        ],
+        "rating": 8.9,
+        "reviews": 1030,
+        "features": [
+            {
+                "hotelId": 1,
+                "name": "Бесплатный интернет"
+            },
+            {
+                "hotelId": 1,
+                "name": "Фитнес"
+            },
+            {
+                "hotelId": 1,
+                "name": "Завтрак в номер"
+            },
+            {
+                "hotelId": 1,
+                "name": "Дворецкий"
+            }
+        ],
+        "rooms": [
+            {
+                "hotelId": 1,
+                "type": "Двухместный номер Deluxe",
+                "maximumGuests": 2,
+                "nightPrice": 55000
+            },
+            {
+                "hotelId": 1,
+                "type": "Двухместный номер Grand Deluxe",
+                "maximumGuests": 2,
+                "nightPrice": 72000
+            }
+        ]
+    },
+    {
+        "name": "Отель Карлтон Москва",
+        "regionId": 1,
+        "images": [
+            "https://cdn.worldota.net/t/640x400/extranet/93/10/9310eaba61048b20c2b99a1d745d73347fc28f9c.jpeg",
+            "https://cdn.worldota.net/t/640x400/extranet/87/83/8783d9fb6b69ff551ef1f62a33eec133095eff6a.jpeg",
+            "https://cdn.worldota.net/t/640x400/extranet/e9/47/e947c3b6d844bf59a59cd57ae2f000c0a4f0abcf.jpeg"
+        ],
+        "rating": 9.0,
+        "reviews": 2132,
+        "features": [
+            {
+                "hotelId": 1,
+                "name": "Завтрак включён"
+            },
+            {
+                "hotelId": 1,
+                "name": "Бассейн"
+            }
+        ],
+        "rooms": [
+            {
+                "hotelId": 1,
+                "type": "Двухместный номер Стандарт",
+                "maximumGuests": 2,
+                "nightPrice": 19000
+            },
+            {
+                "hotelId": 1,
+                "type": "Двухместный номер Делюкс с видом на город",
+                "maximumGuests": 2,
+                "nightPrice": 28000
+            },
+            {
+                "hotelId": 1,
+                "type": "Люкс Панорамный с видом на Кремль",
+                "maximumGuests": 4,
+                "nightPrice": 152000
+            }
+        ]
+    }
+]

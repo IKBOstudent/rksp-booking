@@ -3,6 +3,7 @@ import { DatePicker } from '@gravity-ui/date-components';
 import { DateTime, dateTime } from '@gravity-ui/date-utils';
 import {
     Button,
+    Divider,
     Flex,
     Icon,
     List,
@@ -11,7 +12,7 @@ import {
     Text,
     TextInput,
 } from '@gravity-ui/uikit';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
     useSearchHotelsMutation,
@@ -36,7 +37,7 @@ interface FormData {
     guestsCount: number;
 }
 
-export const SearchForm = () => {
+export const SearchForm: React.FC = () => {
     const dispatch = useAppDispatch();
     const ref = useRef<HTMLInputElement>(null);
 
@@ -133,21 +134,23 @@ export const SearchForm = () => {
                 >
                     <List
                         items={suggests}
-                        renderItem={(item) => (
-                            <Flex alignItems="center">
-                                <Icon data={PaperPlane} size={12} />
-                                <Text
-                                    variant="body-2"
-                                    style={{ marginLeft: 6 }}
-                                >
-                                    {item.name}
-                                </Text>
-                            </Flex>
+                        renderItem={(item, _, index) => (
+                            <React.Fragment key={index}>
+                                <Flex alignItems="center">
+                                    <Icon data={PaperPlane} size={12} />
+                                    <Text
+                                        variant="body-2"
+                                        style={{ marginLeft: 6 }}
+                                    >
+                                        {item.name}
+                                    </Text>
+                                </Flex>
+                            </React.Fragment>
                         )}
                         onItemClick={handleSuggestSelect}
                         filterable={false}
                         virtualized={false}
-                        itemHeight={32}
+                        itemHeight={38}
                         itemClassName={styles.popupItem}
                         className={styles.popupContainer}
                     />

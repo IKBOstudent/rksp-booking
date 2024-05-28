@@ -19,7 +19,7 @@ export const HotelCard: React.FC<IHotelCardProps> = ({
         <Card view="filled" style={{ padding: 8 }}>
             <Flex gap={4}>
                 <img
-                    src={images[0]}
+                    src={images[0] || DEFAULT_HOTEL_IMAGE}
                     alt="отель"
                     width={200}
                     height={200}
@@ -38,20 +38,23 @@ export const HotelCard: React.FC<IHotelCardProps> = ({
                         </Label>
                     </Flex>
                     <Flex gap={2} direction="column">
-                        {features.map(({ name }, index) => (
-                            <Label
-                                key={index}
-                                theme="success"
-                                icon={<Icon size={16} data={Check} />}
-                            >
-                                {name}
-                            </Label>
-                        ))}
+                        {features &&
+                            features.map(({ name }, index) => (
+                                <Label
+                                    key={index}
+                                    theme="success"
+                                    icon={<Icon size={16} data={Check} />}
+                                >
+                                    {name}
+                                </Label>
+                            ))}
                     </Flex>
                     <Flex centerContent justifyContent="space-between">
-                        <Text variant="header-1">
-                            от {rooms[0].nightPrice} RUB
-                        </Text>
+                        {rooms && rooms.length > 0 && (
+                            <Text variant="header-1">
+                                от {rooms[0].nightPrice} RUB
+                            </Text>
+                        )}
                     </Flex>
 
                     <Button view="action" size="l">

@@ -2,6 +2,7 @@ import {
     Button,
     Card,
     Container,
+    Divider,
     Flex,
     Icon,
     Label,
@@ -17,6 +18,7 @@ import { Header } from '~/components/Header/Header';
 import { ArrowRightFromSquare } from '@gravity-ui/icons';
 import URLs from '~/constants/URLs';
 import Cookies from 'js-cookie';
+import { HotelCards } from './components/HotelCards/HotelCards';
 
 export const ProfilePage: React.FC = () => {
     const navigate = useNavigate();
@@ -66,7 +68,11 @@ export const ProfilePage: React.FC = () => {
                 </Button>
             </Flex>
 
+            <Divider orientation="horizontal" />
             {role === 'ADMIN' && <AdminTable />}
+
+            <Divider orientation="horizontal" />
+            {role !== 'CLIENT' && <HotelCards />}
         </Container>
     );
 };

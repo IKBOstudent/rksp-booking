@@ -11,12 +11,13 @@ export const searchController = async (req: Request, res: Response) => {
     }
 
     try {
+        // todo make rooms sorted asc
         const hotels = await prisma.hotel.findMany({
             where: {
                 regionId: parseInt(regionId.toString(), 10),
                 rooms: {
                     some: {
-                        maximumGuestsCount: {
+                        maximumGuests: {
                             gte: parseInt(guestsCount.toString(), 10),
                         },
                         reservations: {

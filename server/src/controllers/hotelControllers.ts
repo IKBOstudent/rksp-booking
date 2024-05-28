@@ -2,9 +2,21 @@ import { Request, Response } from 'express';
 import { AuthRequest } from '../types';
 import { prisma } from '..';
 
-export const getAllHotelsController = async (_: Request, res: Response) => {
+export const getAllHotelsController = async (
+    req: AuthRequest,
+    res: Response,
+) => {
+    const owner = req.user?.id;
+
+    if (!owner) {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
+
     try {
         const hotels = await prisma.hotel.findMany({
+            where: {
+                owner,
+            },
             include: {
                 features: true,
                 rooms: true,

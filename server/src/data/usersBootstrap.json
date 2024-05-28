@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Отельер Ваня",
+        "email": "p1@mail.ru",
+        "password": "123",
+        "role": "PARTNER"
+    },
+    {
+        "name": "Клиент Олег",
+        "email": "u1@mail.ru",
+        "password": "123",
+        "role": "CLIENT"
+    }
+]

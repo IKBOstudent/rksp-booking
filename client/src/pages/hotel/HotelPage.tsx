@@ -8,6 +8,7 @@ import { Container, Flex, Icon, Label } from '@gravity-ui/uikit';
 import { Check } from '@gravity-ui/icons';
 import { HotelRooms } from './components/HotelRooms/HotelRooms';
 import { useGetHotelQuery } from '~/store/features/hotels/hotelApi';
+import { Header } from '~/components/Header/Header';
 
 export const HotelPage: React.FC = () => {
     const { id = '' } = useParams();
@@ -29,6 +30,7 @@ export const HotelPage: React.FC = () => {
 
     return (
         <Container maxWidth="m" className="hotel-page">
+            <Header />
             {/* <Breadcrumbs breadcrumbs={breadcrumbs} /> */}
             <Flex>
                 <HotelHeader hotel={hotel} />

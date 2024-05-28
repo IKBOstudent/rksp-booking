@@ -57,11 +57,12 @@ model Feature {
 }
 
 model Room {
-    id                 Int           @id @default(autoincrement())
-    nightPrice         Int
-    maximumGuestsCount Int
-    hotelId            Int
-    reservations       Reservation[]
+    id            Int           @id @default(autoincrement())
+    nightPrice    Int
+    maximumGuests Int
+    type          String
+    hotelId       Int
+    reservations  Reservation[]
 
     Hotel Hotel @relation(fields: [hotelId], references: [id])
 }

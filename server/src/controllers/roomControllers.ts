@@ -56,9 +56,9 @@ export const bookHotelController = async (req: AuthRequest, res: Response) => {
 };
 
 export const createRoomController = async (req: AuthRequest, res: Response) => {
-    const { nightPrice, maximumGuestsCount, hotelId } = req.body;
+    const { nightPrice, type, maximumGuests, hotelId } = req.body;
 
-    if (!nightPrice || !maximumGuestsCount || !hotelId) {
+    if (!nightPrice || !type || !maximumGuests || !hotelId) {
         return res.status(400).json({ error: 'All parameters are required' });
     }
 
@@ -72,8 +72,9 @@ export const createRoomController = async (req: AuthRequest, res: Response) => {
         // TODO: only owner can create
         const room = await prisma.room.create({
             data: {
-                maximumGuestsCount,
+                maximumGuests,
                 nightPrice,
+                type,
                 hotelId,
             },
         });

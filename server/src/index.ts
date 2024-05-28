@@ -72,7 +72,7 @@ app.delete('/api/user/:id', authMiddleware, adminOnly, deleteUser);
 app.get('/api/search_hotels', searchController);
 app.get('/api/suggest_hotels', suggestController);
 
-app.get('/api/hotels', getAllHotelsController);
+app.get('/api/hotels', authMiddleware, editorOnly, getAllHotelsController);
 app.get('/api/hotel/:id', getHotelController);
 app.post('/api/hotel', authMiddleware, editorOnly, createHotelController);
 app.patch('/api/hotel/:id', authMiddleware, editorOnly, updateHotelController);
