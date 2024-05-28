@@ -7,7 +7,7 @@ export const SearchPage = () => {
         <div>
             {/* <Text variant='header-2'>Поиск отелей по выгодным ценам</Text> */}
             <SearchForm />
-            <Offers />
+            {/* <Offers /> */}
         </div>
     );
 };

@@ -1,23 +1,30 @@
+import { debounce } from 'lodash';
 import { DatePicker } from '@gravity-ui/date-components';
 import { DateTime, dateTime } from '@gravity-ui/date-utils';
 import {
     Button,
-    Card,
     Flex,
     List,
     ListItemData,
     Popup,
+    Text,
     TextInput,
 } from '@gravity-ui/uikit';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
     useSearchHotelsMutation,
-    useSuggestHotelsQuery,
+    useSuggestHotelsMutation,
 } from '~/store/features/hotels/hotelApi';
-import { setOffers } from '~/store/features/hotels/hotelSlice';
-import { Suggestion } from '~/store/features/hotels/types';
-import { useAppDispatch } from '~/store/store';
+import {
+    setOffers,
+    setSuggestions,
+    suggestsSelector,
+} from '~/store/features/hotels/hotelSearchSlice';
+import { type ISuggestion } from '~/store/features/hotels/types';
+import { useAppDispatch, useAppSelector } from '~/store/store';
+
+import styles from './SearchForm.module.scss';
 
 interface FormData {
     destination: string;
@@ -29,36 +36,41 @@ interface FormData {
 export const SearchForm = () => {
     const dispatch = useAppDispatch();
     const ref = useRef<HTMLInputElement>(null);
-    const [search, { isLoading }] = useSearchHotelsMutation();
 
+    const [search] = useSearchHotelsMutation();
+
+    const [getSuggest] = useSuggestHotelsMutation();
+    const suggests = useAppSelector(suggestsSelector);
+    const [selectedRegion, setSelectedRegion] = useState<ISuggestion>();
     const [showPopup, setShowPopup] = useState<boolean>(false);
 
-    const { register, control, getValues, handleSubmit, setFocus, setValue } =
-        useForm<FormData>();
+    const {
+        control,
+        getValues,
+        handleSubmit,
+        setValue,
+        formState: { isValid },
+    } = useForm<FormData>();
 
-    const { data: suggestData, isFetching } = useSuggestHotelsQuery(
-        getValues('destination'),
-    );
+    const getInitialSuggests = async () => {
+        const data = await getSuggest('').unwrap();
+        dispatch(setSuggestions(data.suggestions));
+    };
 
     useEffect(() => {
-        setFocus('destination');
+        getInitialSuggests();
     }, []);
 
-    const onSubmit = async ({
-        destination,
-        startDate,
-        endDate,
-        guestsCount,
-    }: FormData) => {
+    const onSubmit = async ({ startDate, endDate, guestsCount }: FormData) => {
         const checkInDate = startDate?.format('MM/DD/YYYY');
         const checkOutDate = endDate?.format('MM/DD/YYYY');
 
-        if (!checkInDate || !checkOutDate) {
+        if (!selectedRegion || !checkInDate || !checkOutDate) {
             return;
         }
 
         const searchParams = {
-            region: destination,
+            regionId: selectedRegion.id,
             checkInDate,
             checkOutDate,
             guestsCount,
@@ -69,8 +81,15 @@ export const SearchForm = () => {
         dispatch(setOffers(data.hotels));
     };
 
-    const handleSuggestSelect = (item: ListItemData<Suggestion>) => {
+    const handleDestinationUpdate = debounce(async (value: string) => {
+        const data = await getSuggest(value).unwrap();
+        dispatch(setSuggestions(data.suggestions));
+    }, 300);
+
+    const handleSuggestSelect = (item: ListItemData<ISuggestion>) => {
         setValue('destination', item.name);
+        setSelectedRegion(item);
+        setShowPopup(false);
     };
 
     return (
@@ -79,6 +98,7 @@ export const SearchForm = () => {
                 <Controller
                     name="destination"
                     control={control}
+                    rules={{ required: true }}
                     defaultValue=""
                     render={({ field }) => (
                         <TextInput
@@ -88,34 +108,42 @@ export const SearchForm = () => {
                             style={{ width: '30%' }}
                             placeholder="Москва"
                             label="Куда:"
+                            hasClear
                             ref={ref}
                             value={field.value}
-                            onUpdate={field.onChange}
+                            onUpdate={(value) => {
+                                field.onChange(value);
+                                handleDestinationUpdate(value);
+                            }}
                             onBlur={() => setShowPopup(false)}
                             onFocus={() => setShowPopup(true)}
                         />
                     )}
                 />
 
-                {suggestData && (
-                    <Popup
-                        anchorRef={ref}
-                        placement="bottom-start"
-                        open={showPopup}
-                        onClose={() => setShowPopup(false)}
-                    >
-                        <List
-                            items={suggestData.suggestions}
-                            virtualized
-                            itemsHeight={150}
-                            onItemClick={handleSuggestSelect}
-                        />
-                    </Popup>
-                )}
+                <Popup
+                    anchorRef={ref}
+                    placement="bottom-start"
+                    open={showPopup && suggests.length > 0}
+                >
+                    <List
+                        items={suggests}
+                        renderItem={(item) => (
+                            <Text variant="subheader-2">{item.name}</Text>
+                        )}
+                        onItemClick={handleSuggestSelect}
+                        filterable={false}
+                        virtualized={false}
+                        itemHeight={32}
+                        itemClassName={styles.popupItem}
+                        className={styles.popupContainer}
+                    />
+                </Popup>
 
                 <Controller
                     name="startDate"
                     control={control}
+                    rules={{ required: true }}
                     defaultValue={null}
                     render={({ field }) => (
                         <DatePicker
@@ -140,10 +168,9 @@ export const SearchForm = () => {
                             pin="brick-brick"
                             style={{ width: '20%' }}
                             placeholder="Дата выезда"
+                            minValue={getValues('startDate') || undefined}
                             value={field.value}
                             onUpdate={field.onChange}
-                            minValue={getValues('startDate') ?? undefined}
-                            disabled={getValues('startDate') === null}
                         />
                     )}
                 />
@@ -158,9 +185,14 @@ export const SearchForm = () => {
                             size="xl"
                             pin="brick-brick"
                             style={{ width: '20%' }}
-                            label="Гостей:"
+                            label="Гостей: "
                             onUpdate={(value) =>
-                                field.onChange(parseInt(value, 10))
+                                field.onChange(
+                                    Math.min(
+                                        Math.max(parseInt(value, 10), 1),
+                                        10,
+                                    ),
+                                )
                             }
                             value={field.value.toString()}
                         />
@@ -173,9 +205,9 @@ export const SearchForm = () => {
                     size="xl"
                     view="action"
                     style={{ width: '10%' }}
-                    loading={isLoading}
+                    disabled={!selectedRegion || !isValid}
                 >
-                    Найти
+                    <Text variant="body-2">Найти</Text>
                 </Button>
             </Flex>
         </form>

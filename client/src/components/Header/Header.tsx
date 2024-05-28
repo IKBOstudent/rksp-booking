@@ -14,9 +14,9 @@ export const Header: React.FC = () => {
             alignItems="center"
             style={{ padding: 12 }}
         >
-            <Text variant="header-1">
-                <Link to={URLs.HomeRoot}>Домой</Link>
-            </Text>
+            <Link to={URLs.HomeRoot}>
+                <Text variant="header-1">Rksp-Booking</Text>
+            </Link>
             {Boolean(user) ? (
                 <Link to={URLs.ProfileRoot}>
                     <UserLabel>{user?.name}</UserLabel>

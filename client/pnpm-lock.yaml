@@ -38,6 +38,9 @@ importers:
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -53,9 +56,6 @@ importers:
       react-router-dom:
         specifier: ^6.22.3
         version: 6.23.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      sass:
-        specifier: ^1.72.0
-        version: 1.77.2
       sass-loader:
         specifier: ^14.1.1
         version: 14.2.1(sass@1.77.2)
@@ -69,6 +69,9 @@ importers:
       '@types/js-cookie':
         specifier: ^3.0.6
         version: 3.0.6
+      '@types/lodash':
+        specifier: ^4.17.4
+        version: 4.17.4
       '@types/react':
         specifier: ^18.2.67
         version: 18.3.3
@@ -84,6 +87,9 @@ importers:
       eslint-plugin-react:
         specifier: ^7.34.1
         version: 7.34.1(eslint@9.3.0)
+      sass:
+        specifier: ^1.77.2
+        version: 1.77.2
       typescript:
         specifier: ^5.4.3
         version: 5.4.5
@@ -584,6 +590,9 @@ packages:
 
   '@types/js-cookie@3.0.6':
     resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
+
+  '@types/lodash@4.17.4':
+    resolution: {integrity: sha512-wYCP26ZLxaT3R39kiN2+HcJ4kTd3U1waI/cY7ivWYqFP6pW3ZNpvi6Wd6PHZx7T/t8z0vlkXMg3QYLa7DZ/IJQ==}
 
   '@types/node@20.12.12':
     resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
@@ -2543,6 +2552,8 @@ snapshots:
       hoist-non-react-statics: 3.3.2
 
   '@types/js-cookie@3.0.6': {}
+
+  '@types/lodash@4.17.4': {}
 
   '@types/node@20.12.12':
     dependencies:

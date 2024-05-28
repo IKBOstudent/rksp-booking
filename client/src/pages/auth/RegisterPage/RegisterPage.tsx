@@ -32,7 +32,10 @@ export const RegisterPage: React.FC = () => {
                 />
                 <Text>
                     Уже есть аккаунт?
-                    <Link to={URLs.Login} style={{ marginLeft: 8 }}>
+                    <Link
+                        to={URLs.Login}
+                        style={{ marginLeft: 8, textDecoration: 'underline' }}
+                    >
                         Войти
                     </Link>
                 </Text>

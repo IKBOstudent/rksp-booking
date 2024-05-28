@@ -1,9 +1,7 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import path from 'path';
-import fs from 'fs';
-
-const prisma = new PrismaClient();
+import { regionsDataset } from '../data/regions';
+import { prisma } from '..';
 
 const adminUser = {
     name: 'admin',
@@ -32,10 +30,6 @@ export const seedAdmin = async () => {
     }
 };
 
-const regionsDataset: { city: string; lon: number; lat: number }[] = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'regions.json'), 'utf8'),
-);
-
 export const seedRegions = async () => {
     try {
         console.log('executing seed regions...');
@@ -44,11 +38,13 @@ export const seedRegions = async () => {
             return prisma.region.create({
                 data: {
                     name: region.city,
+                    lat: parseFloat(region.lat),
+                    lon: parseFloat(region.lon),
                 },
             });
         });
 
-        await prisma.batch(batch, { transaction: true });
+        await prisma.$transaction(batch);
 
         console.log('seed regions done.');
     } catch (err) {

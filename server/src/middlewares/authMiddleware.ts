@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { prisma } from '.';
+import { prisma } from '..';
 import { Role } from '@prisma/client';
-import { ITokenData } from './types';
+import { AuthRequest, ITokenData } from '../types';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -17,14 +17,7 @@ export const createToken = (user: ITokenData) => {
     });
 };
 
-interface AuthRequest extends Request {
-    user?: {
-        id: number;
-        role: Role;
-    };
-}
-
-const authMiddleware = async (
+export const authMiddleware = async (
     req: AuthRequest,
     res: Response,
     next: NextFunction,
@@ -56,7 +49,7 @@ const authMiddleware = async (
     }
 };
 
-const roleMiddleware = (roles: Role[]) => {
+export const roleMiddleware = (roles: Role[]) => {
     return (req: AuthRequest, res: Response, next: NextFunction) => {
         if (!req.user || !roles.includes(req.user.role)) {
             return res.status(403).json({ message: 'Forbidden' });
@@ -64,5 +57,3 @@ const roleMiddleware = (roles: Role[]) => {
         next();
     };
 };
-
-export { authMiddleware, roleMiddleware, AuthRequest };

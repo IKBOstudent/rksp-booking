@@ -1,45 +1,50 @@
-export interface IFeature {
-    id: number;
-    value: boolean;
-    name: string;
-}
-
 export interface IHotel {
     id: number;
     name: string;
-    region: string;
+    regionId: number;
     imageUrl: string;
-    price: number;
     rating: number;
     reviews: number;
     features: IFeature[];
-    availableRoomsCount: number;
+    rooms: IRoom[];
+}
+
+export interface IFeature {
+    id: number;
+    name: string;
+    hotelId: number;
+}
+
+export interface IRoom {
+    id: number;
+    nightPrice: number;
+    maximumGuestsCount: number;
+    hotelId: number;
+    reservations: IReservation[];
 }
 
 export interface IReservation {
     id: number;
-    userId: number;
-    hotelId: number;
     checkInDate: Date;
     checkOutDate: Date;
-    guestsCount: number;
+    userId: number;
+    roomId: number;
 }
 
 export interface ISearchParams {
-    region: string;
+    regionId: number;
     checkInDate: string;
     checkOutDate: string;
     guestsCount: number;
 }
 
 export interface IBookData {
-    hotelId: number;
+    roomId: number;
     checkInDate: Date;
     checkOutDate: Date;
-    guestsCount: number;
 }
 
-export interface Suggestion {
+export interface ISuggestion {
     id: number;
     name: string;
 }

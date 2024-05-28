@@ -4,7 +4,7 @@ import {
     IHotel,
     IReservation,
     ISearchParams,
-    Suggestion,
+    ISuggestion,
 } from './types';
 
 export const hotelsApi = createApi({
@@ -17,13 +17,6 @@ export const hotelsApi = createApi({
         getHotels: builder.query<{ hotels: IHotel[] }, void>({
             query: () => '/api/hotels',
         }),
-        searchHotels: builder.mutation<{ hotels: IHotel[] }, ISearchParams>({
-            query: (searchParams) => ({
-                url: '/api/search_hotels',
-                method: 'GET',
-                params: searchParams,
-            }),
-        }),
         addHotel: builder.mutation<{ hotel: IHotel }, IHotel>({
             query: (newHotel) => ({
                 url: '/api/hotels',
@@ -31,17 +24,27 @@ export const hotelsApi = createApi({
                 body: newHotel,
             }),
         }),
-        bookHotel: builder.mutation<{ reservation: IReservation }, IBookData>({
-            query: (reservationData) => ({
-                url: '/api/book',
-                method: 'POST',
-                body: reservationData,
+        searchHotels: builder.mutation<{ hotels: IHotel[] }, ISearchParams>({
+            query: (searchParams) => ({
+                url: '/api/search_hotels',
+                method: 'GET',
+                params: searchParams,
             }),
         }),
-        suggestHotels: builder.query<{ suggestions: Suggestion[] }, string>({
-            query: (input) => ({
-                url: '/suggest_hotels',
-                params: { input },
+        suggestHotels: builder.mutation<{ suggestions: ISuggestion[] }, string>(
+            {
+                query: (input) => ({
+                    url: '/api/suggest_hotels',
+                    method: 'GET',
+                    params: { input },
+                }),
+            },
+        ),
+        bookHotel: builder.mutation<{ reservation: IReservation }, IBookData>({
+            query: (bookData) => ({
+                url: '/api/book',
+                method: 'POST',
+                body: bookData,
             }),
         }),
     }),
@@ -52,5 +55,5 @@ export const {
     useSearchHotelsMutation,
     useAddHotelMutation,
     useBookHotelMutation,
-    useSuggestHotelsQuery,
+    useSuggestHotelsMutation,
 } = hotelsApi;

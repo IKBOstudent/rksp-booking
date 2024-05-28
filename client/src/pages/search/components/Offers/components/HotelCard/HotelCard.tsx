@@ -9,10 +9,11 @@ const DEFAULT_HOTEL_IMAGE =
 
 export const HotelCard = ({
     name,
-    rating,
     imageUrl,
-    price,
+    rating,
+    reviews,
     features,
+    rooms,
 }: IHotelCardProps) => {
     return (
         <Card view="filled" style={{ padding: 8 }}>
@@ -37,21 +38,20 @@ export const HotelCard = ({
                         </Label>
                     </Flex>
                     <Flex gap={2} direction="column">
-                        {features.map(
-                            ({ value, name }, index) =>
-                                value && (
-                                    <Label
-                                        key={index}
-                                        theme="success"
-                                        icon={<Icon size={16} data={Check} />}
-                                    >
-                                        {name}
-                                    </Label>
-                                ),
-                        )}
+                        {features.map(({ name }, index) => (
+                            <Label
+                                key={index}
+                                theme="success"
+                                icon={<Icon size={16} data={Check} />}
+                            >
+                                {name}
+                            </Label>
+                        ))}
                     </Flex>
                     <Flex centerContent justifyContent="space-between">
-                        <Text variant="display-1">{price} RUB</Text>
+                        <Text variant="display-1">
+                            {rooms[0].nightPrice} RUB
+                        </Text>
                     </Flex>
                     <Button view="normal" size="l">
                         <Text variant="subheader-1">Забронировать </Text>

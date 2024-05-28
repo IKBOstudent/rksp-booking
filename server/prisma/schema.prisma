@@ -34,27 +34,34 @@ model Region {
 }
 
 model Hotel {
-    id                  Int           @id @default(autoincrement())
-    name                String
-    regionId            Int
-    imageUrl            String
-    price               Int
-    rating              Float
-    reviews             Int
-    features            Feature[]
-    availableRoomsCount Int
-    reservations        Reservation[]
-    owner               Int
+    id       Int       @id @default(autoincrement())
+    name     String
+    regionId Int
+    imageUrl String
+    rating   Float
+    reviews  Int
+    owner    Int
+    features Feature[]
+    rooms    Room[]
 
     region Region @relation(fields: [regionId], references: [id])
     User   User   @relation(fields: [owner], references: [id])
 }
 
 model Feature {
-    id      Int     @id @default(autoincrement())
-    value   Boolean
+    id      Int    @id @default(autoincrement())
     name    String
     hotelId Int
+
+    Hotel Hotel @relation(fields: [hotelId], references: [id])
+}
+
+model Room {
+    id                 Int           @id @default(autoincrement())
+    nightPrice         Int
+    maximumGuestsCount Int
+    hotelId            Int
+    reservations       Reservation[]
 
     Hotel Hotel @relation(fields: [hotelId], references: [id])
 }
@@ -63,10 +70,9 @@ model Reservation {
     id           Int      @id @default(autoincrement())
     checkInDate  DateTime
     checkOutDate DateTime
-    guestsCount  Int
-    hotelId      Int
+    roomId       Int
     userId       Int
 
-    User  User  @relation(fields: [userId], references: [id])
-    hotel Hotel @relation(fields: [hotelId], references: [id])
+    User User @relation(fields: [userId], references: [id])
+    Room Room @relation(fields: [roomId], references: [id])
 }
