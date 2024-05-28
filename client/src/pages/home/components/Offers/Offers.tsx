@@ -1,5 +1,5 @@
 import { Flex, Text } from '@gravity-ui/uikit';
-import { HotelCard } from './components/HotelCard/HotelCard';
+import { HotelCard } from '~/components/HotelCard/HotelCard';
 import { useAppSelector } from '~/store/store';
 import { offersSelector } from '~/store/features/hotels/hotelSearchSlice';
 

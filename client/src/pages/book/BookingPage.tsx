@@ -1,29 +1,35 @@
-import { Button } from '@gravity-ui/uikit';
+import { Button, useToaster } from '@gravity-ui/uikit';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import URLs from '~/constants/URLs';
 import { useBookHotelMutation } from '~/store/features/hotels/hotelApi';
 
 export const BookingPage = () => {
-    const { hotelId, checkInDate, checkOutDate, guestsCount } = useParams();
+    const { roomId, checkInDate, checkOutDate } = useParams();
     const navigate = useNavigate();
+
+    const toaster = useToaster();
 
     const [bookHotel, { isLoading, error }] = useBookHotelMutation();
 
     const onSubmit = async () => {
         try {
-            if (hotelId && checkInDate && checkOutDate) {
+            if (roomId && checkInDate && checkOutDate) {
                 await bookHotel({
-                    hotelId: parseInt(hotelId, 10),
-                    checkInDate: new Date(checkInDate),
-                    checkOutDate: new Date(checkOutDate),
-                    guestsCount: parseInt(guestsCount || '2', 10),
+                    roomId: parseInt(roomId, 10),
+                    checkInDate,
+                    checkOutDate,
                 }).unwrap();
 
-                navigate(URLs.HomeRoot); // Redirect to home or any other page
+                toaster.add({
+                    name: 'Successfully booked room',
+                    theme: 'success',
+                });
+
+                navigate(URLs.HomeRoot);
             }
         } catch (error) {
-            //
+            toaster.add({ name: 'Error booking room', theme: 'danger' });
         }
     };
     return (

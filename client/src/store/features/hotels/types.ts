@@ -9,8 +9,21 @@ export interface IHotel {
     rooms: IRoom[];
 }
 
+export interface IHotelData {
+    name: string;
+    regionId: number;
+    imageUrl: string;
+    rating: number;
+    reviews: number;
+}
+
 export interface IFeature {
     id: number;
+    name: string;
+    hotelId: number;
+}
+
+export interface IFeatureData {
     name: string;
     hotelId: number;
 }
@@ -23,6 +36,12 @@ export interface IRoom {
     reservations: IReservation[];
 }
 
+export interface IRoomData {
+    nightPrice: number;
+    maximumGuestsCount: number;
+    hotelId: number;
+}
+
 export interface IReservation {
     id: number;
     checkInDate: Date;
@@ -31,17 +50,17 @@ export interface IReservation {
     roomId: number;
 }
 
+export interface IReservationData {
+    roomId: number;
+    checkInDate: string;
+    checkOutDate: string;
+}
+
 export interface ISearchParams {
     regionId: number;
     checkInDate: string;
     checkOutDate: string;
     guestsCount: number;
-}
-
-export interface IBookData {
-    roomId: number;
-    checkInDate: Date;
-    checkOutDate: Date;
 }
 
 export interface ISuggestion {

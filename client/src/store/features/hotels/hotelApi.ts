@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
-    IBookData,
+    IReservationData,
+    IFeature,
+    IFeatureData,
     IHotel,
+    IHotelData,
     IReservation,
+    IRoom,
+    IRoomData,
     ISearchParams,
     ISuggestion,
 } from './types';
@@ -17,11 +22,53 @@ export const hotelsApi = createApi({
         getHotels: builder.query<{ hotels: IHotel[] }, void>({
             query: () => '/api/hotels',
         }),
-        addHotel: builder.mutation<{ hotel: IHotel }, IHotel>({
+        addHotel: builder.mutation<{ hotel: IHotel }, IHotelData>({
             query: (newHotel) => ({
-                url: '/api/hotels',
+                url: '/api/hotel',
                 method: 'POST',
                 body: newHotel,
+            }),
+        }),
+        updateHotel: builder.mutation<
+            { hotel: IHotel },
+            { id: number; hotelData: Partial<IHotelData> }
+        >({
+            query: ({ id, hotelData }) => ({
+                url: `/api/hotel/${id}`,
+                method: 'PUT',
+                body: hotelData,
+            }),
+        }),
+        deleteHotel: builder.mutation<{}, number>({
+            query: (id) => ({
+                url: `/api/hotel/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        addFeature: builder.mutation<{ feature: IFeature }, IFeatureData>({
+            query: (newFeature) => ({
+                url: '/api/hotel_feature',
+                method: 'POST',
+                body: newFeature,
+            }),
+        }),
+        deleteFeature: builder.mutation<{}, number>({
+            query: (id) => ({
+                url: `/api/hotel_feature/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        addRoom: builder.mutation<{ room: IRoom }, IRoomData>({
+            query: (newRoom) => ({
+                url: '/api/hotel_room',
+                method: 'POST',
+                body: newRoom,
+            }),
+        }),
+        deleteRoom: builder.mutation<{}, number>({
+            query: (id) => ({
+                url: `/api/hotel_room/${id}`,
+                method: 'DELETE',
             }),
         }),
         searchHotels: builder.mutation<{ hotels: IHotel[] }, ISearchParams>({
@@ -40,7 +87,10 @@ export const hotelsApi = createApi({
                 }),
             },
         ),
-        bookHotel: builder.mutation<{ reservation: IReservation }, IBookData>({
+        bookHotel: builder.mutation<
+            { reservation: IReservation },
+            IReservationData
+        >({
             query: (bookData) => ({
                 url: '/api/book',
                 method: 'POST',

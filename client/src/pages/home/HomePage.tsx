@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Container, Text } from '@gravity-ui/uikit';
 import { Header } from '~/components/Header/Header';
 import { SearchForm } from '~/components/SearchForm/SearchForm';
+import { Offers } from './components/Offers/Offers';
 
 export const HomePage: React.FC = () => {
     return (
@@ -16,6 +17,10 @@ export const HomePage: React.FC = () => {
 
                 <div style={{ marginTop: 12 }}>
                     <SearchForm />
+                </div>
+
+                <div>
+                    <Offers />
                 </div>
             </Card>
         </Container>

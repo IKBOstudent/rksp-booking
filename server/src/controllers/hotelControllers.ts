@@ -1,40 +1,37 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthRequest } from '../types';
 import { prisma } from '..';
-import { Role } from '@prisma/client';
 
-export const getHotelsController = async (req: AuthRequest, res: Response) => {
+export const getAllHotelsController = async (_: Request, res: Response) => {
     try {
-        const owner = req.user?.id;
-
-        if (!owner) {
-            return res.status(403).json({ message: 'Forbidden' });
-        }
-
-        let hotels;
-
-        if (req.user?.role === Role.ADMIN) {
-            hotels = await prisma.hotel.findMany({
-                include: {
-                    features: true,
-                    rooms: true,
-                },
-            });
-        } else {
-            hotels = await prisma.hotel.findMany({
-                where: {
-                    owner,
-                },
-                include: {
-                    features: true,
-                    rooms: true,
-                },
-            });
-        }
+        const hotels = await prisma.hotel.findMany({
+            include: {
+                features: true,
+                rooms: true,
+            },
+        });
 
         res.status(200).json({ hotels });
     } catch (error) {
         res.status(500).json({ error: 'failed to get hotels' });
+    }
+};
+
+export const getHotelController = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const hotel = await prisma.hotel.findUnique({
+            where: { id },
+            include: {
+                features: true,
+                rooms: true,
+            },
+        });
+
+        res.status(200).json({ hotel });
+    } catch (error) {
+        res.status(500).json({ error: 'failed to get hotel' });
     }
 };
 

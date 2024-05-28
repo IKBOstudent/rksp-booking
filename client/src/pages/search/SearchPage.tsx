@@ -1,6 +1,6 @@
 import { Text } from '@gravity-ui/uikit';
 import { SearchForm } from '~/components/SearchForm/SearchForm';
-import { Offers } from './components/Offers/Offers';
+import { Offers } from '../home/components/Offers/Offers';
 
 export const SearchPage = () => {
     return (

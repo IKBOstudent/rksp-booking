@@ -4,11 +4,13 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { authApi } from './features/auth/authApi';
 import auth from './features/auth/authSlice';
 import hotelSearch from './features/hotels/hotelSearchSlice';
+import hotel from './features/hotels/hotelSlice';
 import { hotelsApi } from './features/hotels/hotelApi';
 
 export const store = configureStore({
     reducer: {
         auth,
+        hotel,
         hotelSearch,
         [authApi.reducerPath]: authApi.reducer,
         [hotelsApi.reducerPath]: hotelsApi.reducer,
