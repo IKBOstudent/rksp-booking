@@ -37,14 +37,14 @@ model Hotel {
     id       Int       @id @default(autoincrement())
     name     String
     regionId Int
-    imageUrl String
+    images   String[]
     rating   Float
     reviews  Int
     owner    Int
     features Feature[]
     rooms    Room[]
 
-    region Region @relation(fields: [regionId], references: [id])
+    Region Region @relation(fields: [regionId], references: [id])
     User   User   @relation(fields: [owner], references: [id])
 }
 

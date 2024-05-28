@@ -3,8 +3,12 @@ import { Card, Container, Text } from '@gravity-ui/uikit';
 import { Header } from '~/components/Header/Header';
 import { SearchForm } from '~/components/SearchForm/SearchForm';
 import { Offers } from './components/Offers/Offers';
+import { useAppSelector } from '~/store/store';
+import { searchParamsSelector } from '~/store/features/hotels/hotelSearchSlice';
 
 export const HomePage: React.FC = () => {
+    const searchParams = useAppSelector(searchParamsSelector);
+
     return (
         <Container maxWidth="l">
             <Header />
@@ -18,11 +22,12 @@ export const HomePage: React.FC = () => {
                 <div style={{ marginTop: 12 }}>
                     <SearchForm />
                 </div>
-
-                <div>
+            </Card>
+            {searchParams && (
+                <div style={{ marginTop: 24 }}>
                     <Offers />
                 </div>
-            </Card>
+            )}
         </Container>
     );
 };

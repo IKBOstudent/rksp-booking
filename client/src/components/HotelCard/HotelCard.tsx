@@ -1,25 +1,25 @@
 import { Button, Card, Flex, Icon, Label, Text } from '@gravity-ui/uikit';
 import { ArrowUpRightFromSquare, Check, Link, Star } from '@gravity-ui/icons';
 import { IHotel } from '~/store/features/hotels/types';
+import React from 'react';
 
 interface IHotelCardProps extends Omit<IHotel, 'id'> {}
 
 const DEFAULT_HOTEL_IMAGE =
     'https://jkfenner.com/wp-content/uploads/2019/11/default.jpg';
 
-export const HotelCard = ({
+export const HotelCard: React.FC<IHotelCardProps> = ({
     name,
-    imageUrl,
+    images,
     rating,
-    reviews,
     features,
     rooms,
-}: IHotelCardProps) => {
+}) => {
     return (
         <Card view="filled" style={{ padding: 8 }}>
             <Flex gap={4}>
                 <img
-                    src={imageUrl}
+                    src={images[0]}
                     alt="отель"
                     width={200}
                     height={200}
@@ -49,12 +49,13 @@ export const HotelCard = ({
                         ))}
                     </Flex>
                     <Flex centerContent justifyContent="space-between">
-                        <Text variant="display-1">
-                            {rooms[0].nightPrice} RUB
+                        <Text variant="header-1">
+                            от {rooms[0].nightPrice} RUB
                         </Text>
                     </Flex>
-                    <Button view="normal" size="l">
-                        <Text variant="subheader-1">Забронировать </Text>
+
+                    <Button view="action" size="l">
+                        <Text variant="subheader-1">Открыть</Text>
                         <Icon data={ArrowUpRightFromSquare} size={18} />
                     </Button>
                 </Flex>

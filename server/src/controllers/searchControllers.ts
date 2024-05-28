@@ -11,39 +11,40 @@ export const searchController = async (req: Request, res: Response) => {
     }
 
     try {
-        const groupRooms = await prisma.room.groupBy({
-            by: ['hotelId'],
+        const hotels = await prisma.hotel.findMany({
             where: {
-                Hotel: {
-                    regionId: parseInt(regionId.toString(), 10),
-                },
-                maximumGuestsCount: {
-                    lte: parseInt(guestsCount.toString(), 10),
-                },
-                reservations: {
-                    every: {
-                        OR: [
-                            {
-                                checkInDate: {
-                                    gte: new Date(checkOutDate.toString()),
-                                },
+                regionId: parseInt(regionId.toString(), 10),
+                rooms: {
+                    some: {
+                        maximumGuestsCount: {
+                            gte: parseInt(guestsCount.toString(), 10),
+                        },
+                        reservations: {
+                            none: {
+                                OR: [
+                                    {
+                                        checkInDate: {
+                                            lt: new Date(
+                                                checkOutDate.toString(),
+                                            ),
+                                        },
+                                    },
+                                    {
+                                        checkOutDate: {
+                                            gt: new Date(
+                                                checkInDate.toString(),
+                                            ),
+                                        },
+                                    },
+                                ],
                             },
-                            {
-                                checkOutDate: {
-                                    lte: new Date(checkInDate.toString()),
-                                },
-                            },
-                        ],
+                        },
                     },
                 },
             },
-        });
-
-        const hotels = await prisma.hotel.findMany({
-            where: {
-                id: {
-                    in: groupRooms.map((val) => val.hotelId),
-                },
+            include: {
+                features: true,
+                rooms: true,
             },
         });
 

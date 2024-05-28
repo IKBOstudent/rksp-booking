@@ -22,10 +22,11 @@ export const getHotelController = async (req: Request, res: Response) => {
         const { id } = req.params;
 
         const hotel = await prisma.hotel.findUnique({
-            where: { id },
+            where: { id: parseInt(id, 10) },
             include: {
                 features: true,
                 rooms: true,
+                Region: true,
             },
         });
 
@@ -39,7 +40,7 @@ export const createHotelController = async (
     req: AuthRequest,
     res: Response,
 ) => {
-    const { name, regionId, imageUrl, rating, reviews } = req.body;
+    const { name, regionId, images, rating, reviews } = req.body;
 
     const owner = req.user?.id;
 
@@ -52,7 +53,7 @@ export const createHotelController = async (
             data: {
                 name,
                 regionId,
-                imageUrl,
+                images,
                 rating,
                 reviews,
                 owner,
@@ -69,7 +70,7 @@ export const updateHotelController = async (
     res: Response,
 ) => {
     const { id } = req.params;
-    const { name, imageUrl, rating, reviews } = req.body;
+    const { name, images, rating, reviews } = req.body;
 
     const owner = req.user?.id;
 
@@ -85,7 +86,7 @@ export const updateHotelController = async (
             },
             data: {
                 name,
-                imageUrl,
+                images,
                 rating,
                 reviews,
             },

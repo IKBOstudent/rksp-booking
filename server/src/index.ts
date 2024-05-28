@@ -75,7 +75,7 @@ app.get('/api/suggest_hotels', suggestController);
 app.get('/api/hotels', getAllHotelsController);
 app.get('/api/hotel/:id', getHotelController);
 app.post('/api/hotel', authMiddleware, editorOnly, createHotelController);
-app.put('/api/hotel/:id', authMiddleware, editorOnly, updateHotelController);
+app.patch('/api/hotel/:id', authMiddleware, editorOnly, updateHotelController);
 app.delete('/api/hotel/:id', authMiddleware, editorOnly, deleteHotelController);
 
 app.post(

@@ -4,6 +4,7 @@ import { DateTime, dateTime } from '@gravity-ui/date-utils';
 import {
     Button,
     Flex,
+    Icon,
     List,
     ListItemData,
     Popup,
@@ -18,6 +19,7 @@ import {
 } from '~/store/features/hotels/hotelApi';
 import {
     setOffers,
+    setSearchParams,
     setSuggestions,
     suggestsSelector,
 } from '~/store/features/hotels/hotelSearchSlice';
@@ -25,6 +27,7 @@ import { type ISuggestion } from '~/store/features/hotels/types';
 import { useAppDispatch, useAppSelector } from '~/store/store';
 
 import styles from './SearchForm.module.scss';
+import { Hashtag, PaperPlane } from '@gravity-ui/icons';
 
 interface FormData {
     destination: string;
@@ -46,11 +49,13 @@ export const SearchForm = () => {
 
     const {
         control,
-        getValues,
         handleSubmit,
         setValue,
+        watch,
         formState: { isValid },
-    } = useForm<FormData>();
+    } = useForm<FormData>({ shouldUnregister: false });
+
+    const startDateField = watch('startDate') ?? undefined;
 
     const getInitialSuggests = async () => {
         const data = await getSuggest('').unwrap();
@@ -75,7 +80,7 @@ export const SearchForm = () => {
             checkOutDate,
             guestsCount,
         };
-        console.log(searchParams);
+        dispatch(setSearchParams(searchParams));
 
         const data = await search(searchParams).unwrap();
         dispatch(setOffers(data.hotels));
@@ -129,7 +134,15 @@ export const SearchForm = () => {
                     <List
                         items={suggests}
                         renderItem={(item) => (
-                            <Text variant="subheader-2">{item.name}</Text>
+                            <Flex alignItems="center">
+                                <Icon data={PaperPlane} size={12} />
+                                <Text
+                                    variant="body-2"
+                                    style={{ marginLeft: 6 }}
+                                >
+                                    {item.name}
+                                </Text>
+                            </Flex>
                         )}
                         onItemClick={handleSuggestSelect}
                         filterable={false}
@@ -168,7 +181,8 @@ export const SearchForm = () => {
                             pin="brick-brick"
                             style={{ width: '20%' }}
                             placeholder="Дата выезда"
-                            minValue={getValues('startDate') || undefined}
+                            minValue={startDateField}
+                            disabled={!startDateField}
                             value={field.value}
                             onUpdate={field.onChange}
                         />
