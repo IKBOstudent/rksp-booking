@@ -1,4 +1,5 @@
 import {
+    Divider,
     Flex,
     Loader,
     Table,
@@ -33,12 +34,8 @@ const AdminTable: React.FC = () => {
     const handleDeleteUser = async (user: IUser) => {
         try {
             await deleteUser(user.id);
-            toaster.add({
-                name: 'Successfully deleted user',
-                theme: 'success',
-            });
         } catch (err) {
-            toaster.add({ name: 'Error while deleting user', theme: 'danger' });
+            //
         }
     };
 
@@ -61,6 +58,7 @@ const AdminTable: React.FC = () => {
 
     return (
         <Flex direction="column" gap={2}>
+            <Divider />
             <Text variant="subheader-3">Данные о пользователях</Text>
             <TableWithActions
                 columns={columns}

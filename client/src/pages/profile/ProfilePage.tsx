@@ -68,10 +68,8 @@ export const ProfilePage: React.FC = () => {
                 </Button>
             </Flex>
 
-            <Divider orientation="horizontal" />
             {role === 'ADMIN' && <AdminTable />}
 
-            <Divider orientation="horizontal" />
             {role !== 'CLIENT' && <HotelCards />}
         </Container>
     );

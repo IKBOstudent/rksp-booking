@@ -25,6 +25,7 @@ import {
     getHotelController,
     getAllHotelsController,
     updateHotelController,
+    deleteFeatureController,
 } from './controllers/hotelControllers';
 import {
     bookHotelController,
@@ -88,7 +89,7 @@ app.delete(
     '/api/hotel_feature/:id',
     authMiddleware,
     editorOnly,
-    deleteHotelController,
+    deleteFeatureController,
 );
 
 app.post('/api/hotel_room', authMiddleware, editorOnly, createRoomController);

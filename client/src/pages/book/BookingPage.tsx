@@ -22,14 +22,19 @@ export const BookingPage = () => {
                 }).unwrap();
 
                 toaster.add({
-                    name: 'Successfully booked room',
+                    name: 'bookSuccess',
+                    title: 'Бронь успешна',
                     theme: 'success',
                 });
 
                 navigate(URLs.HomeRoot);
             }
         } catch (error) {
-            toaster.add({ name: 'Error booking room', theme: 'danger' });
+            toaster.add({
+                name: 'bookFailure',
+                title: 'Произошла ошибка',
+                theme: 'danger',
+            });
         }
     };
     return (
