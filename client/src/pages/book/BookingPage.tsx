@@ -40,7 +40,7 @@ export const BookingPage = () => {
     return (
         <div>
             <Button onClick={onSubmit} type="submit" disabled={isLoading}>
-                Book
+                Забронировать
             </Button>
         </div>
     );

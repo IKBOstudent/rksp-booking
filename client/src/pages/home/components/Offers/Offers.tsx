@@ -6,9 +6,7 @@ import React from 'react';
 
 export const Offers: React.FC = () => {
     const offers = useAppSelector(offersSelector);
-
-    // if
-
+    console.log(offers);
     return (
         <div>
             {offers.length === 0 && (
@@ -18,7 +16,7 @@ export const Offers: React.FC = () => {
             )}
             <Flex gap={4} direction="column" style={{ padding: 16 }}>
                 {offers.map(({ id, ...rest }) => (
-                    <HotelCard key={id} {...rest} />
+                    <HotelCard key={id} id={id} {...rest} />
                 ))}
             </Flex>
         </div>

@@ -6,7 +6,15 @@ export const HotelImages: React.FC<{ images: string[] }> = ({ images }) => {
         <div className="hotel-images-carousel">
             {images.map((src, index) => (
                 <div key={index}>
-                    <img src={src} alt={'Hotel view ${index}'} />
+                    <img
+                        src={src}
+                        alt="отель"
+                        width={220}
+                        height={220}
+                        style={{
+                            objectFit: 'cover',
+                        }}
+                    />
                 </div>
             ))}
         </div>

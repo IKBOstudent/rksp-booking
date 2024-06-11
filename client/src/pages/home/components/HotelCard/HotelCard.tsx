@@ -16,6 +16,7 @@ export const HotelCard: React.FC<IHotel> = ({
     features = [],
     rooms = [],
 }) => {
+    // console.log(`${URLs.Hotel}/${id}`);
     return (
         <Card view="filled" overflow="hidden">
             <Flex gap={4} alignItems="center">
