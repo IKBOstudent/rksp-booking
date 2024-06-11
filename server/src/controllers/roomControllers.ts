@@ -16,37 +16,35 @@ export const bookHotelController = async (req: AuthRequest, res: Response) => {
     }
 
     try {
-        // const overlappingReservations = await prisma.reservation.findMany({
-        //     where: {
-        //         roomId,
-        //         OR: [
-        //             {
-        //                 checkInDate: {
-        //                     lt: new Date(checkOutDate),
-        //                 },
-        //             },
-        //             {
-        //                 checkOutDate: {
-        //                     gt: new Date(checkInDate),
-        //                 },
-        //             },
-        //         ],
-        //     },
-        // });
+        const overlappingReservations = await prisma.reservation.findMany({
+            where: {
+                roomId,
+                OR: [
+                    {
+                        checkInDate: {
+                            lt: new Date(checkOutDate),
+                        },
+                    },
+                    {
+                        checkOutDate: {
+                            gt: new Date(checkInDate),
+                        },
+                    },
+                ],
+            },
+        });
 
-        // if (overlappingReservations.length > 0) {
-        //     return res.status(409).json({
-        //         message: 'Room is not available',
-        //     });
-        // }
-
-        console.log(roomId, checkInDate, checkOutDate, userId);
+        if (overlappingReservations.length > 0) {
+            return res.status(409).json({
+                message: 'Room is not available',
+            });
+        }
 
         const reservation = await prisma.reservation.create({
             data: {
                 roomId,
-                checkInDate,
-                checkOutDate,
+                checkInDate: new Date(checkInDate),
+                checkOutDate: new Date(checkOutDate),
                 userId,
             },
         });
