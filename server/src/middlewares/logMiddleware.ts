@@ -6,7 +6,7 @@ export const logMiddleware = (
     next: NextFunction,
 ) => {
     console.log(
-        `[${new Date().toISOString()}]  :  ${req.method} ${decodeURI(req.url)} from: ${req.headers.host} path=${req.path} params=${req.params} body=${JSON.stringify(req.body)}`,
+        `[${new Date().toISOString()}]  :  ${req.method} ${decodeURI(req.url)} from: ${req.headers.host} params=${JSON.stringify(req.params)} body=${JSON.stringify(req.body)}`,
     );
 
     next();
