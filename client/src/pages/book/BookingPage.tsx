@@ -24,6 +24,7 @@ export const BookingPage = () => {
                 toaster.add({
                     name: 'bookSuccess',
                     title: 'Бронь успешна',
+                    content: `Забронирован номер ${roomId} с ${checkInDate} по ${checkOutDate}`,
                     theme: 'success',
                 });
 
