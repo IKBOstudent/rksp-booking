@@ -24,15 +24,17 @@ export const HotelPage: React.FC = () => {
     return (
         <Container maxWidth="m" className="hotel-page">
             <Header />
-            <Flex>
-                <HotelHeader hotel={hotel} />
-            </Flex>
-            <Flex direction="column">
-                <HotelImages images={hotel.images} />
-            </Flex>
-            <Flex gap={2} direction="column"></Flex>
+            <Flex direction="column" gap={4}>
+                <Flex>
+                    <HotelHeader hotel={hotel} />
+                </Flex>
+                <Flex direction="column">
+                    <HotelImages images={hotel.images} />
+                </Flex>
+                {/* <Flex gap={2} direction="column"></Flex> */}
 
-            {hotel.rooms && <HotelRooms rooms={hotel.rooms} />}
+                {hotel.rooms && <HotelRooms rooms={hotel.rooms} />}
+            </Flex>
         </Container>
     );
 };

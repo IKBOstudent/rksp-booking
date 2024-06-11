@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card } from '@gravity-ui/uikit';
+import { Card, Flex } from '@gravity-ui/uikit';
 
 export const HotelImages: React.FC<{ images: string[] }> = ({ images }) => {
     return (
-        <div className="hotel-images-carousel">
+        <Flex gap={4}>
             {images.map((src, index) => (
                 <div key={index}>
                     <img
@@ -17,6 +17,6 @@ export const HotelImages: React.FC<{ images: string[] }> = ({ images }) => {
                     />
                 </div>
             ))}
-        </div>
+        </Flex>
     );
 };
